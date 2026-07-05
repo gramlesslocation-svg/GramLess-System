@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Grands Orders</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f6f8;
+    }
+
+    header {
+      background: #111;
+      color: white;
+      padding: 18px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .container {
+      padding: 15px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    h3 {
+      margin-top: 20px;
+    }
+
+    .product {
+      background: white;
+      margin: 12px 0;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .product h4 {
+      margin: 0;
+    }
+
+    .product button {
+      background: #111;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+
+    .checkout, .orders, .payment {
+      background: white;
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 6px 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    .checkout button {
+      width: 100%;
+      background: #0a7cff;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .pay-box {
+      text-align: center;
+    }
+
+    .pay-btn {
+      width: 100%;
+      background: #16a34a;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    .pay-btn:hover {
+      background: #12803a;
+    }
+
+    .small {
+      font-size: 12px;
+      color: gray;
+      margin-top: 8px;
+    }
+
+    .cart {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #111;
+      color: white;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .orders p {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>Grands Rice Orders</header>
+
+<div class="container">
+
+  <h3>Products</h3>
+
+  <div class="product">
+    <h4>Rice Golden 800g</h4>
+    <button onclick="add('Rice Golden 800g', 5)">Add</button>
+  </div>
+
+  <div class="product">
+    <h4>Rice Golden 2.4kg</h4>
+    <button onclick="add('Rice Golden 2.4kg', 12)">Add</button>
+  </div>
+
+  <div class="product">
+    <h4>Rice Steam 800g</h4>
+    <button onclick="add('Rice Steam 800g', 5)">Add</button>
+  </div>
+
+  <div class="product">
+    <h4>Rice Steam 2.4kg</h4>
+    <button onclick="add('Rice Steam 2.4kg', 12)">Add</button>
+  </div>
+
+  <div class="product">
+    <h4>Rice Creamy 800g</h4>
+    <button onclick="add('Rice Creamy 800g', 5)">Add</button>
+  </div>
+
+  <div class="product">
+    <h4>Rice Creamy 2.4kg</h4>
+    <button onclick="add('Rice Creamy 2.4kg', 12)">Add</button>
+  </div>
+
+  <div class="product">
+    <h4>Rice White 800g</h4>
+    <button onclick="add('Rice White 800g', 5)">Add</button>
+  </div>
+
+  <div class="product">
+    <h4>Rice White 2.4kg</h4>
+    <button onclick="add('Rice White 2.4kg', 12)">Add</button>
+  </div>
+
+  <!-- CHECKOUT -->
+  <div class="checkout">
+    <h3>Checkout</h3>
+
+    <input id="name" placeholder="Customer Name">
+    <input id="address" placeholder="Address">
+    <input id="time" placeholder="Delivery Time (e.g. Monday 2PM)">
+
+    <button onclick="placeOrder()">Place Order</button>
+  </div>
+
+  <!-- PAYMENT UI -->
+  <div class="payment">
+    <h3>Payment</h3>
+
+    <div class="pay-box">
+      <p><b>Total to pay:</b> $<span id="finalTotal">0</span></p>
+
+      <button class="pay-btn" onclick="fakePay()">Pay Now (Card)</button>
+
+      <p class="small">
+        Secure payment powered by Grands Checkout
+      </p>
+    </div>
+  </div>
+
+  <!-- ORDERS -->
+  <div class="orders">
+    <h3>Orders (Admin View)</h3>
+    <div id="ordersList"></div>
+  </div>
+
+</div>
+
+<!-- CART BAR -->
+<div class="cart">
+  🛒 Items: <span id="count">0</span> |
+  Total: $<span id="total">0</span>
+</div>
+
+<script>
+let cart = [];
+let total = 0;
+let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+function add(name, price) {
+  cart.push(name);
+  total += price;
+
+  document.getElementById("count").innerText = cart.length;
+  document.getElementById("total").innerText = total;
+  document.getElementById("finalTotal").innerText = total;
+}
+
+function placeOrder() {
+  let name = document.getElementById("name").value;
+  let address = document.getElementById("address").value;
+  let time = document.getElementById("time").value;
+
+  if(cart.length === 0) {
+    alert("Cart is empty");
+    return;
+  }
+
+  let order = {
+    name,
+    address,
+    time,
+    items: cart,
+    total: total
+  };
+
+  orders.push(order);
+  localStorage.setItem("orders", JSON.stringify(orders));
+
+  cart = [];
+  total = 0;
+
+  document.getElementById("count").innerText = 0;
+  document.getElementById("total").innerText = 0;
+  document.getElementById("finalTotal").innerText = 0;
+
+  loadOrders();
+
+  alert("Order placed successfully!");
+}
+
+function fakePay() {
+  if(total === 0) {
+    alert("Add items first");
+    return;
+  }
+
+  alert("Redirecting to secure payment gateway...");
+
+  setTimeout(() => {
+    alert("Payment Successful ✅ Order Confirmed!");
+  }, 1500);
+}
+
+function loadOrders() {
+  let html = "";
+
+  orders.forEach((o, i) => {
+    html += `
+      <p>
+        <b>Order ${i+1}</b><br>
+        Name: ${o.name}<br>
+        Address: ${o.address}<br>
+        Time: ${o.time}<br>
+        Items: ${o.items.join(", ")}<br>
+        Total: $${o.total}
+      </p>
+      <hr>
+    `;
+  });
+
+  document.getElementById("ordersList").innerHTML = html;
+}
+
+loadOrders();
+</script>
+
+</body>
+</html>
