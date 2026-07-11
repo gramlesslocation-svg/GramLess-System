@@ -1,7 +1,7 @@
 {
-  "name": "GramLess Locations",
+  "name": "GramLess",
   "short_name": "GramLess",
-  "start_url": "/GramLess-Locations-/index.html",
+  "start_url": "https://gramlesslocation-svg.github.io/GramLess-System/?",
   "scope": "/GramLess-Locations-/",
   "display": "standalone",
   "background_color": "#000000",
