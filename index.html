@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GramLess - Premium Rice Ordering</title>
+    
+    <!-- EMBEDDED STYLES (CSS) -->
+    <style>
+        /* Color Variables & Reset */
+        :root {
+            --bg-dark: #121212;
+            --card-bg: #FFFFFF;
+            --text-dark: #1C1C1C;
+            --text-muted: #757575;
+            --primary-yellow: #FFDE4D;
+            --yellow-hover: #E5C740;
+            --border-color: #E0E0E0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Branding */
+        .auth-container {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo-text {
+            color: #FFFFFF;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .yellow-text {
+            color: var(--primary-yellow);
+        }
+
+        .tagline {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+
+        /* Authentication Card Layout */
+        .auth-box {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .auth-tabs {
+            display: flex;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 25px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--text-dark);
+            border-bottom: 3px solid var(--primary-yellow);
+        }
+
+        /* Form Styles */
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .input-group input[type="text"],
+        .input-group input[type="email"],
+        .input-group input[type="password"] {
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: var(--text-dark);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--primary-yellow);
+            color: var(--text-dark);
+            border: none;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--yellow-hover);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <!-- Logo Header -->
+        <div class="brand-header">
+            <h1 class="logo-text">Gram<span class="yellow-text">Less</span></h1>
+            <p class="tagline">Premium Rice, Delivered Right.</p>
+        </div>
+
+        <!-- Dynamic Auth Box -->
+        <div class="auth-box">
+            <!-- Toggle Tabs -->
+            <div class="auth-tabs">
+                <button id="tab-login" class="tab-btn active" onclick="switchTab('login')">Log In</button>
+                <button id="tab-signup" class="tab-btn" onclick="switchTab('signup')">Create Account</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form" onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" required placeholder="name@email.com">
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary">Access Account</button>
+            </form>
+
+            <!-- Signup Form (Cleaned - Admin option completely removed) -->
+            <form id="signup-form" class="auth-form hidden" onsubmit="handleSignup(event)">
+                <div class="input-group">
+                    <label for="signup-name">Full Name or Company</label>
+                    <input type="text" id="signup-name" required placeholder="John Doe Rice Traders">
+                </div>
+                <div class="input-group">
+                    <label for="signup-email">Email Address</label>
+                    <input type="email" id="signup-email" required placeholder="name@email.com">
+                </div>
+                <div class="input-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" required placeholder="Create password">
+                </div>
+                <button type="submit" class="btn-primary">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- EMBEDDED LOGIC (JAVASCRIPT) -->
+    <script>
+        // Switch tabs between Log In and Create Account
+        function switchTab(type) {
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            const tabLogin = document.getElementById('tab-login');
+            const tabSignup = document.getElementById('tab-signup');
+
+            if (type === 'login') {
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+                tabLogin.classList.add('active');
+                tabSignup.classList.remove('active');
+            } else {
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+                tabLogin.classList.remove('active');
+                tabSignup.classList.add('active');
+            }
+        }
+
+        // Handle Account Creation
+        function handleSignup(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+
+            // Get existing user database
+            let users = JSON.parse(localStorage.getItem('gramless_users')) || [];
+
+            // Verify if email is already taken
+            if (users.find(u => u.email === email)) {
+                alert('This email address is already registered!');
+                return;
+            }
+
+            // Save regular user data object
+            const newUser = { name, email, password, role: 'client' };
+            users.push(newUser);
+            localStorage.setItem('gramless_users', JSON.stringify(users));
+
+            alert('Account created successfully! Redirecting to home...');
+            
+            // Go straight to your separate home.html file
+            window.location.href = 'home.html';
+        }
+
+        // Handle User Login verification
+        function handleLogin(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            // System Master Admin bypass account
+            if (email === 'admin@gramless.com' && password === 'admin123') {
+                alert('Welcome back, Chief Admin!');
+                window.location.href = 'home.html';
+                return;
+            }
+
+            // Check stored user accounts
+            let users = JSON.parse(localStorage.getItem('gramless_users')) || [];
+            const matchedUser = users.find(u => u.email === email && u.password === password);
+
+            if (matchedUser) {
+                alert(`Login successful. Welcome back, ${matchedUser.name}!`);
+                // Go straight to your separate home.html file
+                window.location.href = 'home.html';
+            } else {
+                alert('Invalid email credentials or incorrect password.');
+            }
+        }
+    </script>
+</body>
+</html>
