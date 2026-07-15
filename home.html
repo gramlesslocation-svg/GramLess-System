@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GramLess - Home</title>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --text-dark: #1C1C1C;
+            --text-muted: #757575;
+            --primary-yellow: #FFDE4D;
+            --search-bg: #F5F5F7;
+            --border-color: #E0E0E0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #FFFFFF;
+            padding: 20px 20px 100px 20px; /* Extra bottom padding so content doesn't get hidden behind the bar */
+            display: flex;
+            justify-content: center;
+        }
+
+        .home-container {
+            width: 100%;
+            max-width: 800px;
+            margin-top: 10px;
+        }
+
+        /* Top Search Bar */
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--text-muted);
+            border-radius: 50%;
+        }
+
+        .search-icon::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            bottom: -5px;
+            width: 6px;
+            height: 2px;
+            background: var(--text-muted);
+            transform: rotate(45deg);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px 16px 16px 50px;
+            background-color: var(--search-bg);
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
+            color: var(--text-dark);
+            outline: none;
+        }
+
+        /* Grid for the 4 Items */
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 500px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .product-card {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+        }
+
+        .product-image-box {
+            width: 100%;
+            height: 180px;
+            background-color: #FAFAFA;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .product-image-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .product-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .product-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Floating Sticky Bottom Cart Layout Bar */
+        .cart-sticky-bar {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 500px;
+            background-color: #121212; /* Sleek Black */
+            border-radius: 16px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            z-index: 9999;
+        }
+
+        .cart-left-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Yellow Badge counter */
+        .cart-quantity-badge {
+            background-color: var(--primary-yellow);
+            color: var(--text-dark);
+            font-size: 1.1rem;
+            font-weight: 800;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-status-text {
+            color: #FFFFFF;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .btn-view-cart {
+            background-color: transparent;
+            color: var(--primary-yellow);
+            border: 2px solid var(--primary-yellow);
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+        }
+
+        .btn-view-cart:hover {
+            background-color: var(--primary-yellow);
+            color: var(--text-dark);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="home-container">
+        <!-- Search -->
+        <div class="search-wrapper">
+            <div class="search-icon"></div>
+            <input type="text" class="search-input" placeholder="Search for an item or a product...">
+        </div>
+
+        <!-- 4 Varieties Grid -->
+        <div class="product-grid">
+            <!-- Item 1 -->
+            <div class="product-card" onclick="openProduct('steam', 'GramLess Steam Basmati Rice')">
+                <div class="product-image-box">
+                    <img src="steam-rice.png" alt="Steam Rice">
+                </div>
+                <div class="product-title">Steam Rice</div>
+                <div class="product-subtitle">Premium Basmati</div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="product-card" onclick="openProduct('golden', 'GramLess Golden Sella Rice')">
+                <div class="product-image-box">
+                    <img src="golden-rice.png" alt="Golden Rice">
+                </div>
+                <div class="product-title">Golden Rice</div>
+                <div class="product-subtitle">Premium Basmati</div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="product-card" onclick="openProduct('white', 'GramLess Classic White Rice')">
+                <div class="product-image-box">
+                    <img src="white-rice.png" alt="White Rice">
+                </div>
+                <div class="product-title">White Rice</div>
+                <div class="product-subtitle">Premium Basmati</div>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="product-card" onclick="openProduct('creamy', 'GramLess Creamy Sella Rice')">
+                <div class="product-image-box">
+                    <img src="creamy-rice.png" alt="Creamy Rice">
+                </div>
+                <div class="product-title">Creamy Rice</div>
+                <div class="product-subtitle">Premium Basmati</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STICKY BOTTOM ACTIONS FOOTER BAR -->
+    <div class="cart-sticky-bar">
+        <div class="cart-left-status">
+            <div id="home-cart-badge" class="cart-quantity-badge">0</div>
+            <div class="cart-status-text">Items in your cart</div>
+        </div>
+        <button class="btn-view-cart" onclick="goToCartPage()">View Cart</button>
+    </div>
+
+    <script>
+        function openProduct(id, fullName) {
+            window.location.href = `product.html?id=${id}&name=${encodeURIComponent(fullName)}`;
+        }
+
+        // Live calculation sequence on page enter
+        window.onload = function() {
+            updateCartStickyCount();
+        };
+
+        function updateCartStickyCount() {
+            let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
+            
+            // Math total accumulator of all quantity fields inside the storage matrix
+            let totalQuantity = 0;
+            cartItems.forEach(item => {
+                totalQuantity += parseInt(item.qty);
+            });
+
+            document.getElementById('home-cart-badge').innerText = totalQuantity;
+        }
+
+        function goToCartPage() {
+            // Forward user over into your upcoming custom shopping cart page link
+            window.location.href = 'cart.html';
+        }
+    </script>
+</body>
+</html>
