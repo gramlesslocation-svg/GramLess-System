@@ -343,3 +343,97 @@
     <!-- STICKY ACTION FOOTER CONTROLS CONSOLE -->
     <div class="fixed-action-footer">
         <a href="home.html" class="btn-add-items-link">Add items</a>
+<script>
+        window.onload = function() {
+            renderPremiumBasketRows();
+        };
+
+        // Reads the shared storage matrices and renders rows with +/- adjustments
+        function renderPremiumBasketRows() {
+            const stackList = document.getElementById('cart-items-list-stack');
+            let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
+
+            if (cartItems.length === 0) {
+                stackList.innerHTML = `<p class="empty-cart-text">Your cart is currently empty.</p>`;
+                document.getElementById('summary-subtotal-price').innerText = "$0.00";
+                document.getElementById('footer-checkout-price').innerText = "$0.00";
+                document.getElementById('cart-item-count-badge').innerText = "0";
+                return;
+            }
+
+            let netTotalAccumulator = 0;
+            let netItemCount = 0;
+
+            stackList.innerHTML = cartItems.map((item, index) => {
+                const totalItemPrice = item.price * item.qty;
+                netTotalAccumulator += totalItemPrice;
+                netItemCount += item.qty;
+
+                return `
+                    <div class="item-row-card">
+                        <div class="item-main-details">
+                            <img class="product-thumbnail" src="${item.id}-rice.png" alt="${item.name}" onerror="this.src='https://placehold.co'">
+                            <div class="product-meta">
+                                <h4>${item.name}</h4>
+                                <p class="product-meta-weight">${item.size}</p>
+                                <p class="product-meta-price">$${item.price.toFixed(2)}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Reference matching +/- Capsule -->
+                        <div class="qty-control-capsule">
+                            <button class="btn-qty-action" onclick="modifyRowQuantity(${index}, -1)">&#128465;</button>
+                            <span class="qty-current-value">${item.qty}</span>
+                            <button class="btn-qty-action" onclick="modifyRowQuantity(${index}, 1)">+</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Apply metric calculations to headers and summaries
+            document.getElementById('summary-subtotal-price').innerText = `$${netTotalAccumulator.toFixed(2)}`;
+            document.getElementById('footer-checkout-price').innerText = `$${netTotalAccumulator.toFixed(2)}`;
+            document.getElementById('cart-item-count-badge').innerText = netItemCount;
+        }
+
+        // Live modification of individual rows with zero boundary checks
+        function modifyRowQuantity(index, shiftAmount) {
+            let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
+            
+            cartItems[index].qty += shiftAmount;
+
+            // If item amount drops below one unit, remove it from list
+            if (cartItems[index].qty < 1) {
+                cartItems.splice(index, 1);
+            }
+
+            localStorage.setItem('gramless_cart', JSON.stringify(cartItems));
+            
+            // Instantly refresh elements layout
+            renderPremiumBasketRows();
+        }
+
+        // Handles linking directly to checkout.html
+        function proceedToCheckoutPage() {
+            let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
+            const addressInput = document.getElementById('user-delivery-location').value.trim();
+
+            if (cartItems.length === 0) {
+                alert('Your cart is empty! Add products first before attempting checkout.');
+                return;
+            }
+
+            if (!addressInput) {
+                alert('Please enter your delivery address before proceeding to checkout.');
+                return;
+            }
+
+            // Save the address temporarily so checkout.html can read it later
+            localStorage.setItem('gramless_temp_address', addressInput);
+
+            // Forward straight into checkout.html file as requested
+            window.location.href = 'checkout.html';
+        }
+    </script>
+</body>
+</html>
