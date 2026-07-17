@@ -295,3 +295,80 @@
             <span id="footer-checkout-price">$0.00</span>
         </button>
     </div>
+    <script>
+        window.onload = function() {
+            renderPremiumBasketRows();
+        };
+
+        // Reads shopping cart matrix memory states
+        function renderPremiumBasketRows() {
+            const stackList = document.getElementById('cart-items-list-stack');
+            let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
+
+            if (cartItems.length === 0) {
+                stackList.innerHTML = `<p class="empty-cart-text">Your cart is currently empty.</p>`;
+                document.getElementById('summary-subtotal-price').innerText = "$0.00";
+                document.getElementById('footer-checkout-price').innerText = "$0.00";
+                return;
+            }
+
+            let netTotalAccumulator = 0;
+
+            stackList.innerHTML = cartItems.map((item, index) => {
+                const totalItemPrice = item.price * item.qty;
+                netTotalAccumulator += totalItemPrice;
+
+                return `
+                    <div class="item-row-card">
+                        <div class="item-main-details">
+                            <img class="product-thumbnail" src="${item.id}-rice.png" alt="${item.name}" onerror="this.src='https://placehold.co'">
+                            <div class="product-meta">
+                                <h4>${item.name}</h4>
+                                <p class="product-meta-weight">${item.size}</p>
+                                <p class="product-meta-price">$${item.price.toFixed(2)}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Increment Controller Capsule -->
+                        <div class="qty-control-capsule">
+                            <button class="btn-qty-action" onclick="modifyRowQuantity(${index}, -1)">-</button>
+                            <span class="qty-current-value">${item.qty}</span>
+                            <button class="btn-qty-action" onclick="modifyRowQuantity(${index}, 1)">+</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('summary-subtotal-price').innerText = `$${netTotalAccumulator.toFixed(2)}`;
+            document.getElementById('footer-checkout-price').innerText = `$${netTotalAccumulator.toFixed(2)}`;
+        }
+
+        // Live modification updates
+        function modifyRowQuantity(index, shiftAmount) {
+            let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
+            
+            cartItems[index].qty += shiftAmount;
+
+            if (cartItems[index].qty < 1) {
+                cartItems.splice(index, 1);
+            }
+
+            localStorage.setItem('gramless_cart', JSON.stringify(cartItems));
+            renderPremiumBasketRows();
+        }
+
+        // Link redirection to checkout.html
+        function proceedToCheckoutPage() {
+            let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
+
+            if (cartItems.length === 0) {
+                alert('Your cart is empty! Add products first before attempting checkout.');
+                return;
+            }
+
+            window.location.href = 'checkout.html';
+        }
+    </script>
+</body>
+</html>
+
