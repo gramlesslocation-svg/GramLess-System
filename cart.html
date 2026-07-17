@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GramLess - Your Basket</title>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --text-dark: #1C1C1C;
+            --text-muted: #757575;
+            --primary-yellow: #FFDE4D;
+            --yellow-hover: #E5C740;
+            --border-color: #E0E0E0;
+            --card-bg: #FAFAFA;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #FFFFFF;
+            padding: 20px 20px 120px 20px; /* Extra spacing so the sticky footer never covers cards */
+            display: flex;
+            justify-content: center;
+        }
+
+        .cart-container {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 10px;
+        }
+
+        .cart-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* Cart Items List */
+        .cart-items-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .cart-item-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background-color: var(--card-bg);
+        }
+
+        .item-details-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .cart-item-img {
+            width: 70px;
+            height: 70px;
+            background-color: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            object-fit: contain;
+            padding: 5px;
+        }
+
+        .item-text-info h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .item-text-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .item-price-right {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .item-total-cost {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* Trash Removal Action Button */
+        .btn-remove-item {
+            background: none;
+            border: none;
+            color: #FF4D4D;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-remove-item:hover {
+            text-decoration: underline;
+        }
+
+        /* Elegant Location Dispatch Section */
+        .location-section {
+            border: 1px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 35px;
+            background-color: #FCFCFC;
+        }
+
+        .location-section label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: block;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .location-input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            background-color: #FFFFFF;
+        }
+
+        .location-input:focus {
+            border-color: var(--text-dark);
+        }
+
+        /* Sticky Control Console at the bottom */
+        .footer-fixed-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 550px;
+            background-color: #121212;
+            border-radius: 18px;
+            padding: 16px 22px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.35);
+            z-index: 9999;
+        }
+
+        .bill-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #FFFFFF;
+            font-weight: 600;
+            margin-bottom: 14px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .bill-price {
+            color: var(--primary-yellow);
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        .action-btns-flex {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-add-more {
+            flex: 1;
+            background-color: transparent;
+            color: #FFFFFF;
+            border: 2px solid #FFFFFF;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-add-more:hover {
+            background-color: #FFFFFF;
+            color: var(--text-dark);
+        }
+
+        .btn-checkout-submit {
+            flex: 1.3;
+            background-color: var(--primary-yellow);
+            color: var(--text-dark);
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.2s;
+        }
+
+        .btn-checkout-submit:hover {
+            background-color: var(--yellow-hover);
+        }
+
+        .empty-basket-msg {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 50px 0;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cart-container">
+        <h1 class="cart-title">Your Basket</h1>
+
+        <!-- Product Cards Stack -->
+        <div id="cart-cards-stack" class="cart-items-wrapper">
+            <!-- Populated live via JS matrix script -->
+        </div>
+
+        <!-- Location Dispatch Block -->
+        <div class="location-section">
+            <label for="shipping-address">Delivery Location</label>
+            <input type="text" id="shipping-address" class="location-input" placeholder="Enter full delivery street address or business branch...">
+        </div>
+    </div>
+
+    <!-- FIXED BOTTOM CONTROL PANEL -->
+    <div class="footer-fixed-panel">
+        <div class="bill-total-row">
+            <span>Estimated Total:</span>
+            <span id="basket-grand-total" class="bill-price">$0.00 USD</span>
+        </div>
+        <div class="action-btns-flex">
+            <a href="home.html" class="btn-add-more">Add Items</a>
+            <button class="btn-checkout-submit" onclick="submitFinalOrder()">Checkout</button>
+        </div>
+    </div>
