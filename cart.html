@@ -265,3 +265,111 @@
             <button class="btn-checkout-submit" onclick="submitFinalOrder()">Checkout</button>
         </div>
     </div>
+    <script>
+        window.onload = function() {
+            renderCartContents();
+        };
+
+        // Reads the shared storage matrix and prints out custom item cards
+        function renderCartContents() {
+            const stackContainer = document.getElementById('cart-cards-stack');
+            let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
+
+            if (cartItems.length === 0) {
+                stackContainer.innerHTML = `<p class="empty-basket-msg">Your cart is currently empty.</p>`;
+                document.getElementById('basket-grand-total').innerText = "$0.00 USD";
+                return;
+            }
+
+            let grandTotalAccumulator = 0;
+
+            stackContainer.innerHTML = cartItems.map((item, index) => {
+                const calculatedCardTotal = item.price * item.qty;
+                grandTotalAccumulator += calculatedCardTotal;
+
+                return `
+                    <div class="cart-item-card">
+                        <div class="item-details-left">
+                            <img class="cart-item-img" src="${item.id}-rice.png" alt="${item.name}" onerror="this.src='https://placehold.co'">
+                            <div class="item-text-info">
+                                <h3>${item.name}</h3>
+                                <p>Size: ${item.size}</p>
+                                <p>Qty: ${item.qty} bag(s)</p>
+                            </div>
+                        </div>
+                        <div class="item-price-right">
+                            <span class="item-total-cost">$${calculatedCardTotal.toFixed(2)}</span>
+                            <button class="btn-remove-item" onclick="removeItemFromBasket(${index})">Remove</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('basket-grand-total').innerText = `$${grandTotalAccumulator.toFixed(2)} USD`;
+        }
+
+        // Deletes target record row index array item and updates view state live
+        function removeItemFromBasket(indexTarget) {
+            let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
+            
+            // Cut specific product record entry row path out of memory
+            cartItems.splice(indexTarget, 1);
+            
+            localStorage.setItem('gramless_cart', JSON.stringify(cartItems));
+            
+            // Re-render display layout blocks live on screen
+            renderCartContents();
+        }
+
+        // Submits user order list into global business records pool
+        function submitFinalOrder() {
+            let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
+            const deliveryLocation = document.getElementById('shipping-address').value.trim();
+
+            if (cartItems.length === 0) {
+                alert('Your basket is empty! Go add some premium rice products first.');
+                return;
+            }
+
+            if (!deliveryLocation) {
+                alert('Please enter your delivery location address so we know where to drop off your order!');
+                return;
+            }
+
+            // Create global order queue file
+            let companyOrders = JSON.parse(localStorage.getItem('gramless_orders')) || [];
+
+            // Compile item counts string array
+            let descriptionsList = cartItems.map(item => `${item.qty}x ${item.name} (${item.size})`).join(', ');
+
+            // Compute invoice net rate
+            let grandTotal = 0;
+            cartItems.forEach(item => { grandTotal += (item.price * item.qty); });
+
+            // Unique generated tracking code string sequence
+            const trackingID = 'ORD-' + Math.floor(10000 + Math.random() * 90000);
+
+            // Log details package payload array mapping metrics
+            companyOrders.push({
+                id: trackingID,
+                itemsSummary: descriptionsList,
+                location: deliveryLocation,
+                totalCost: `$${grandTotal.toFixed(2)} USD`,
+                status: 'Pending Review',
+                eta: 'Awaiting dispatch scheduling'
+            });
+
+            localStorage.setItem('gramless_orders', JSON.stringify(companyOrders));
+
+            // Clean basket array memory records clean out
+            localStorage.removeItem('gramless_cart');
+
+            alert(`🎉 Success! Your order (${trackingID}) has been sent to GramLess. Check your master admin logs or track your delivery arrival frame window status info updates!`);
+            
+            // Redirect straight back home
+            window.location.href = 'home.html';
+        }
+    </script>
+</body>
+</html>
+
