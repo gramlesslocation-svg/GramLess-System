@@ -277,14 +277,16 @@
             <span id="footer-checkout-price" class="footer-price-display">$0.00</span>
         </button>
     </div>
-        <script>
-        // Fetch client data variables on startup window load
+            <!-- EMBEDDED LOGIC ENGINE -->
+    <script>
+        // Fetch active client account data from the shared browser memory frames
         const authenticatedUserSession = JSON.parse(sessionStorage.getItem('currentUser')) || { email: "unregistered_client@gramless.com", name: "GramLess Customer" };
 
         window.onload = function() {
             calculateCheckoutTotals();
         };
 
+        // Reads the basket state and displays the grand subtotal amount
         function calculateCheckoutTotals() {
             let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
             let subtotalAccumulator = 0;
@@ -296,7 +298,7 @@
             document.getElementById('footer-checkout-price').innerText = `$${subtotalAccumulator.toFixed(2)}`;
         }
 
-        // Submits form parameters, updates global tracking pools, redirects back home
+        // Handles data validation, packages order metadata, triggers admin dispatch loops, and routes back home
         function commitFinalCorporateOrder() {
             const name = document.getElementById('field-name').value.trim();
             const market = document.getElementById('field-market').value.trim();
@@ -309,20 +311,20 @@
 
             let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
 
-            // Enforce form compliance validations rules including the brand new City field
+            // Enforce form compliance validations rules
             if (!name || !market || !phone || !city || !street || !building || !apartment) {
                 alert('Verification Error: Please fill out all required fields before attempting to place your order.');
                 return;
             }
 
             if (cartItems.length === 0) {
-                alert('Your checkout cart is empty! Return to the product display list to load choices.');
+                alert('Your checkout cart is empty! Return to the product catalog list to add choices.');
                 return;
             }
 
             let globalOrdersPool = JSON.parse(localStorage.getItem('gramless_orders')) || [];
             
-            // Build inventory summaries arrays text mappings
+            // Compile basket rows summary lists text strings
             let orderedItemsSummary = cartItems.map(item => `${item.qty}x ${item.name} (${item.size}KG)`).join(', ');
 
             let finalNetCostValue = 0;
@@ -330,10 +332,10 @@
 
             const corporateTrackingCode = 'ORD-' + Math.floor(30000 + Math.random() * 60000);
 
-            // 📦 THE ADMINS RECEIVE THIS COMPLETE PACKAGE ON THEIR INCOMING DESK:
+            // 📦 THE ADMINS RECEIVE THIS COMPLETE INFORMATION LOG PACKET ON THEIR DESK:
             const orderPayloadDataPackage = {
                 id: corporateTrackingCode,
-                userAccountEmail: authenticatedUserSession.email, // Attached buyer identity log email
+                userAccountEmail: authenticatedUserSession.email, // Attached buyer account verification email log
                 clientName: name,
                 marketName: market,
                 phone: phone,
@@ -345,33 +347,42 @@
                 eta: 'Awaiting dispatch scheduling'
             };
 
-            // Save inside the shared orders array log pool so the master dashboard reads it immediately
+            // Commit order records parameters into the system global shared database orders array tracking log pools
             globalOrdersPool.push(orderPayloadDataPackage);
             localStorage.setItem('gramless_orders', JSON.stringify(globalOrdersPool));
 
-            // Format order parameter lines into an urgent corporate dispatch text block for WhatsApp tracking
+            // Format order parameters lines into an urgent corporate dispatch text block for WhatsApp data transfer streams
             const messageString = `🚨 *GRAMLESS NEW ORDER LOGGED* 🚨\n\n` +
                                   `• *Order ID:* ${corporateTrackingCode}\n` +
                                   `• *User Email:* ${authenticatedUserSession.email}\n` +
-                                  `• *Market:* ${market}\n` +
-                                  `• *Contact:* ${name} (${phone})\n` +
-                                  `• *Items:* ${orderedItemsSummary}\n` +
+                                  `• *Market/Company Name:* ${market}\n` +
+                                  `• *Contact Person:* ${name} (${phone})\n` +
+                                  `• *Items Ordered:* ${orderedItemsSummary}\n` +
                                   `• *City/Region:* ${city}\n` +
-                                  `• *Address:* ${street}, ${building}, ${apartment}\n` +
-                                  `• *Driver Notes:* ${driverNotes || 'None'}\n` +
-                                  `• *Bill Total:* $${finalNetCostValue.toFixed(2)} USD`;
+                                  `• *Full Address:* ${street}, ${building}, ${apartment}\n` +
+                                  `• *Driver Instructions:* ${driverNotes || 'None'}\n` +
+                                  `• *Bill Grand Total:* $${finalNetCostValue.toFixed(2)} USD`;
 
             const adminWhatsAppNumber = "96171601621"; 
             const whatsappDispatchLink = `https://whatsapp.com{adminWhatsAppNumber}&text=${encodeURIComponent(messageString)}`;
 
-            // Clean basket array memory records clean out
+            // Flush cart memory clean completely
             localStorage.removeItem('gramless_cart');
 
-            alert(`🎉 Order ${corporateTrackingCode} Submitted Successfully!\n\nYour address and driver notes have been sent to our dispatch team. You will receive a direct delivery timeline confirmation notification shortly.`);
+            alert(`🎉 Order ${corporateTrackingCode} Submitted Successfully!\n\nYour full address and driver instructions have been sent to our dispatch team. You will receive a direct delivery timeline confirmation notification shortly.`);
             
-            // Send information to WhatsApp and return to home page
-            window.open(whatsappDispatchLink, '_blank');
-            window.location.href = 'home.html';
+            // Smart pop-up backup timer hook execution loop to handle mobile pop-up blockers completely
+            const backgroundTab = window.open(whatsappDispatchLink, '_blank');
+
+            if (!backgroundTab || backgroundTab.closed || typeof backgroundTab.closed == 'undefined') { 
+                // Fallback: If blocked, navigate current tab straight to WhatsApp so data is never lost
+                window.location.href = whatsappDispatchLink;
+            } else {
+                // Success: If background tab opened nicely, wait half a second and safely teleport the user back home
+                setTimeout(function() {
+                    window.location.href = 'home.html';
+                }, 500);
+            }
         }
     </script>
 </body>
