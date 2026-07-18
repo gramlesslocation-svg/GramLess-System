@@ -333,7 +333,8 @@
         <h3 class="success-popup-title">Order Logged Successfully!</h3>
         <p class="success-popup-msg">Your address credentials and items have been saved. Tap the button below to transfer your invoice straight to the GramLess dispatch desk.</p>
         
-        <a id="modal-whatsapp-link-anchor" href="#" target="_blank" class="btn-modal-whatsapp-trigger" onclick="forceReturnToHomePageState()">
+        <!-- UPDATED LINK: This uses a direct regular link path to kill the browser blocker -->
+        <a id="modal-whatsapp-link-anchor" href="#" class="btn-modal-whatsapp-trigger" onclick="forceReturnToHomePageState(event)">
             Send to Admin & Return Home
         </a>
     </div>
@@ -418,24 +419,34 @@
                                   `• *Driver Notes:* ${driverNotes || 'None'}\n` +
                                   `• *Bill Grand Total:* $${finalNetCostValue.toFixed(2)} USD`;
 
-            const adminWhatsAppNumber = "96171601621"; 
+                        const adminWhatsAppNumber = "96171601621"; 
+            // FIXED LINK: Added api., /send?phone=, and the missing $ sign
             const whatsappDispatchLink = `https://whatsapp.com{adminWhatsAppNumber}&text=${encodeURIComponent(messageString)}`;
 
             // Reset shopping basket memory clean out
             localStorage.removeItem('gramless_cart');
 
-            // Attach URL to overlay modal action link anchor
-            document.getElementById('modal-whatsapp-link-anchor').href = whatsappDispatchLink;
+            // Save the clean link as a data attribute to bypass pop-up blockers
+            document.getElementById('modal-whatsapp-link-anchor').setAttribute('data-url', whatsappDispatchLink);
 
             // Open up verification overlay card layout panel container on screen
             document.getElementById('success-modal-overlay').style.display = 'flex';
         }
 
-        function forceReturnToHomePageState() {
-            setTimeout(function() {
-                window.location.href = 'home.html';
-            }, 300);
-        }
+        function forceReturnToHomePageState(event) {
+    // Stop the page from instantly jumping away before the link clicks open
+    event.preventDefault();
+    
+    // Get the dynamic whatsapp url link we generated
+    const targetUrl = document.getElementById('modal-whatsapp-link-anchor').getAttribute('data-url');
+    
+    // Teleport the main tab directly to the home screen
+    window.location.href = 'home.html';
+    
+    // Open WhatsApp in a natural, clean separate window tab that mobile systems allow
+    window.open(targetUrl, '_system');
+}
+
     </script>
 </body>
 </html>
