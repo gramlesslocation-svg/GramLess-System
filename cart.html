@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GramLess - Your Cart</title>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --text-dark: #1C1C1C;
+            --text-muted: #757575;
+            --primary-yellow: #FFDE4D;
+            --yellow-hover: #E5C740;
+            --border-color: #F0F0F2;
+            --card-bg: #FFFFFF;
+            --gray-light: #F7F7F9;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #FAFAFB;
+            color: var(--text-dark);
+            padding: 0 0 140px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .cart-wrapper {
+            width: 100%;
+            max-width: 550px;
+            background-color: #FFFFFF;
+            min-height: 100vh;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.02);
+        }
+
+        /* Top Header Layout */
+        .cart-top-nav {
+            display: flex;
+            align-items: center;
+            padding-bottom: 20px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .back-arrow-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-dark);
+            font-weight: 300;
+        }
+
+        .nav-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-left: 15px;
+        }
+
+        /* Group Header Title Banner */
+        .vendor-header-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 5px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .vendor-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .vendor-logo-box {
+            background-color: var(--bg-dark);
+            color: var(--primary-yellow);
+            font-weight: 800;
+            font-size: 0.75rem;
+            padding: 6px 10px;
+            border-radius: 8px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .vendor-name {
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        /* Product Cards Layout Stack */
+        .items-list-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .item-row-card {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .item-main-details {
+            display: flex;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .product-thumbnail {
+            width: 75px;
+            height: 75px;
+            object-fit: contain;
+            background-color: var(--gray-light);
+            border-radius: 12px;
+            padding: 6px;
+            border: 1px solid #EAEAEA;
+        }
+
+        .product-meta h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.3;
+            margin-bottom: 4px;
+        }
+
+        .product-meta-weight {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .product-meta-price {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* Quantity Steps Capsule */
+        .qty-control-capsule {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-dark); /* Dark black capsule */
+            border-radius: 20px;
+            padding: 4px 8px;
+            gap: 12px;
+            align-self: flex-start;
+            margin-top: 5px;
+        }
+
+        .btn-qty-action {
+            background: none;
+            border: none;
+            width: 24px;
+            height: 24px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #FFFFFF; /* White minus/plus signs */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-qty-action:hover {
+            color: var(--primary-yellow);
+        }
+
+        .qty-current-value {
+            font-size: 0.95rem;
+            font-weight: 700;
+            min-width: 14px;
+            text-align: center;
+            color: var(--primary-yellow); /* Yellow quantity reading */
+        }
+
+        /* Subtotal Summary Section */
+        .subtotal-summary-section {
+            padding: 20px 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 25px;
+        }
+
+        /* Fixed Action Footer Layout Bar */
+        .fixed-action-footer {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 550px;
+            background-color: #FFFFFF;
+            border-top: 2px solid var(--bg-dark);
+            padding: 16px 20px 24px 20px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+            z-index: 9999;
+        }
+
+        .btn-add-items-link {
+            flex: 1;
+            background-color: #FFFFFF;
+            color: var(--text-dark);
+            border: 2px solid var(--bg-dark);
+            padding: 15px 10px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .btn-add-items-link:hover {
+            background-color: var(--gray-light);
+        }
+
+        /* Restyled Black and Yellow Checkout Action */
+        .btn-checkout-corporate-action {
+            flex: 1.8;
+            background-color: var(--bg-dark); /* Black theme container */
+            color: #FFFFFF;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-checkout-corporate-action:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn-checkout-corporate-action span:first-child {
+            color: #FFFFFF;
+        }
+
+        .checkout-price-highlight {
+            color: var(--primary-yellow); /* Signature accent pricing text */
+            font-weight: 800;
+        }
+
+        .empty-cart-text {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 60px 0;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cart-wrapper">
+        <!-- Top App Navigation Header -->
+        <div class="cart-top-nav">
+            <button class="back-arrow-btn" onclick="window.location.href='home.html'">&larr;</button>
+            <h2 class="nav-title">My Cart</h2>
+        </div>
+
+        <!-- Group Header Container Card -->
+        <div class="vendor-header-card">
+            <div class="vendor-info">
+                <div class="vendor-logo-box">GramLess</div>
+                <h3 class="vendor-name">Your Cart</h3>
+            </div>
+        </div>
+
+        <!-- Products Stack Container -->
+        <div id="cart-items-list-stack" class="items-list-container">
+            <!-- Populated via script -->
+        </div>
+
+        <!-- Reference Summary Layout Row -->
+        <div class="subtotal-summary-section">
+            <span>Subtotal</span>
+            <span id="summary-subtotal-price">$0.00</span>
+        </div>
+    </div>
+
+    <!-- STICKY CORPORATE FOOTER PANEL -->
+    <div class="fixed-action-footer">
+        <a href="home.html" class="btn-add-items-link">Add items</a>
+        <button class="btn-checkout-corporate-action" onclick="proceedToCheckoutPage()">
+            <span>Checkout</span>
+            <span id="footer-checkout-price" class="checkout-price-highlight">$0.00</span>
+        </button>
+    </div>
+    <script>
+        window.onload = function() {
+            renderPremiumBasketRows();
+        };
+
+        // Reads shopping cart matrix memory states
+        function renderPremiumBasketRows() {
+            const stackList = document.getElementById('cart-items-list-stack');
+            let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
+
+            if (cartItems.length === 0) {
+                stackList.innerHTML = `<p class="empty-cart-text">Your cart is currently empty.</p>`;
+                document.getElementById('summary-subtotal-price').innerText = "$0.00";
+                document.getElementById('footer-checkout-price').innerText = "$0.00";
+                return;
+            }
+
+            let netTotalAccumulator = 0;
+
+            stackList.innerHTML = cartItems.map((item, index) => {
+                const totalItemPrice = item.price * item.qty;
+                netTotalAccumulator += totalItemPrice;
+
+                return `
+                    <div class="item-row-card">
+                        <div class="item-main-details">
+                            <img class="product-thumbnail" src="${item.id}-rice.png" alt="${item.name}" onerror="this.src='https://placehold.co'">
+                            <div class="product-meta">
+                                <h4>${item.name}</h4>
+                                <p class="product-meta-weight">${item.size}</p>
+                                <p class="product-meta-price">$${item.price.toFixed(2)}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Increment Controller Capsule -->
+                        <div class="qty-control-capsule">
+                            <button class="btn-qty-action" onclick="modifyRowQuantity(${index}, -1)">-</button>
+                            <span class="qty-current-value">${item.qty}</span>
+                            <button class="btn-qty-action" onclick="modifyRowQuantity(${index}, 1)">+</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('summary-subtotal-price').innerText = `$${netTotalAccumulator.toFixed(2)}`;
+            document.getElementById('footer-checkout-price').innerText = `$${netTotalAccumulator.toFixed(2)}`;
+        }
+
+        // Live modification updates
+        function modifyRowQuantity(index, shiftAmount) {
+            let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
+            
+            cartItems[index].qty += shiftAmount;
+
+            if (cartItems[index].qty < 1) {
+                cartItems.splice(index, 1);
+            }
+
+            localStorage.setItem('gramless_cart', JSON.stringify(cartItems));
+            renderPremiumBasketRows();
+        }
+
+        // Link redirection to checkout.html
+        function proceedToCheckoutPage() {
+            let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
+
+            if (cartItems.length === 0) {
+                alert('Your cart is empty! Add products first before attempting checkout.');
+                return;
+            }
+
+            window.location.href = 'checkout.html';
+        }
+    </script>
+</body>
+</html>
