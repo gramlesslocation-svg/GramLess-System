@@ -289,19 +289,25 @@
             window.location.href = `product.html?id=${id}&name=${encodeURIComponent(fullName)}`;
         }
 
-        // Your exact logic engine from Part 2 matching values calculations
-        window.onload = function() {
-            if (currentUserData.email === 'admin@gramless.com') {
-                document.getElementById('admin-dashboard-view').classList.remove('hidden');
-                document.getElementById('client-shop-view').classList.add('hidden');
-                renderAdminOrdersLedger();
-            } else {
-                document.getElementById('client-shop-view').classList.remove('hidden');
-                document.getElementById('admin-dashboard-view').classList.add('hidden');
-                updateCartStickyCount();
-            }
-        };
-    
+        // FIXED: Calls the exact matching function name and updates on every page view
+window.onload = function() {
+    if (currentUserData.email === 'admin@gramless.com') {
+        document.getElementById('admin-dashboard-view').classList.remove('hidden');
+        document.getElementById('client-shop-view').classList.add('hidden');
+        renderAdminOrdersLedger();
+    } else {
+        document.getElementById('client-shop-view').classList.remove('hidden');
+        document.getElementById('admin-dashboard-view').classList.add('hidden');
+        updateCartStickyCount(); // <-- 🌟 FIXED: Changes to the correct function name
+    }
+};
+
+// Forces the counter to re-calculate instantly if they click the back button from product.html
+window.addEventListener('pageshow', function() {
+    if (currentUserData && currentUserData.email !== 'admin@gramless.com') {
+        updateCartStickyCount();
+    }
+});
 
 
         function updateCartStickyCount() {
