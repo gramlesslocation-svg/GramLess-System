@@ -370,7 +370,8 @@
             alert(`🎉 Order ${corporateTrackingCode} Submitted Successfully!\n\nYour address and driver notes have been sent to our dispatch team. You will receive a direct delivery timeline confirmation notification shortly.`);
             
             // Send information to WhatsApp and return to home page
-            window.location.href = whatsappDispatchLink;
+            window.open(whatsappDispatchLink, '_blank');
+            window.location.href = 'home.html';
         }
     </script>
 </body>
