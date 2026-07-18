@@ -296,9 +296,13 @@
                 updateCartStickyCount();
             }
         };
+    
+
 
         function updateCartStickyCount() {
+            document.querySelector('.cart-sticky-bar').style.display = 'flex';
             let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
+            
             
             // Math total accumulator of all quantity fields inside the storage matrix
             let totalQuantity = 0;
