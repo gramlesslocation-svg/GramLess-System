@@ -149,6 +149,8 @@
             justify-content: space-between;
             box-shadow: 0 8px 30px rgba(0,0,0,0.3);
             z-index: 9999;
+            display: flex !important;
+
         }
 
         .cart-left-status {
@@ -267,11 +269,14 @@
                 <div class="product-subtitle">Premium Basmati</div>
             </div>
         </div>
-
-        <!-- STICKY BOTTOM ACTIONS FOOTER BAR -->
-        <div class="cart-sticky-bar">
-            <div class="cart-left-status">
-                <div id="home-cart-badge" class="cart-quantity-badge">0</div>
+        <!-- 🛒 FLOATING STICKY BOTTOM ACTIONS FOOTER BAR -->
+<div class="cart-sticky-bar">
+    <div class="cart-left-status">
+        <div id="home-cart-badge" class="cart-quantity-badge">0</div>
+        <div class="cart-status-text">Items in your cart</div>
+    </div>
+    <button class="btn-view-cart" onclick="window.location.href='cart.html'">View Cart</button>
+</div>
 <script>
         // Security role check on page initialization load
         const currentUserData = JSON.parse(sessionStorage.getItem('currentUser'));
