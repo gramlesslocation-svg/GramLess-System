@@ -277,6 +277,16 @@
     </div>
     <button class="btn-view-cart" onclick="window.location.href='cart.html'">View Cart</button>
 </div>
+            <!-- 🏢 GLOBAL ADMINISTRATIVE CONTROL DESK (PASTE THIS RIGHT HERE) -->
+    <div id="admin-dashboard-view" class="admin-wrapper hidden">
+        <button class="btn-admin-logout" onclick="handleLogout()">Log Out</button>
+        <h2 class="admin-title">Global Order Incoming Desk</h2>
+        <p class="admin-sub">Review marketplace shipments, specify expected transit frames, and archive tickets.</p>
+        
+        <!-- This is the crucial anchor tag that the javascript engine injects rows into -->
+        <div id="admin-orders-container-stack"></div>
+    </div>
+
 <script>
         // Security role check on page initialization load
         const currentUserData = JSON.parse(sessionStorage.getItem('currentUser'));
