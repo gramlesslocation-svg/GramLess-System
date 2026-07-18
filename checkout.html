@@ -243,6 +243,11 @@
                     <input type="tel" id="field-phone" placeholder="e.g., +961 71 123 456" required>
                 </div>
                 <div class="form-group-block">
+    <label>City / Region <span>*</span></label>
+    <input type="text" id="field-city" placeholder="e.g., Antelias, Dekwaneh, Jounieh..." required>
+</div>
+
+                <div class="form-group-block">
                     <label>Street Name <span>*</span></label>
                     <input type="text" id="field-street" placeholder="e.g., Main Commercial Highway" required>
                 </div>
@@ -272,7 +277,7 @@
             <span id="footer-checkout-price" class="footer-price-display">$0.00</span>
         </button>
     </div>
-    <script>
+        <script>
         // Fetch client data variables on startup window load
         const authenticatedUserSession = JSON.parse(sessionStorage.getItem('currentUser')) || { email: "unregistered_client@gramless.com", name: "GramLess Customer" };
 
@@ -296,6 +301,7 @@
             const name = document.getElementById('field-name').value.trim();
             const market = document.getElementById('field-market').value.trim();
             const phone = document.getElementById('field-phone').value.trim();
+            const city = document.getElementById('field-city').value.trim();
             const street = document.getElementById('field-street').value.trim();
             const building = document.getElementById('field-building').value.trim();
             const apartment = document.getElementById('field-apartment').value.trim();
@@ -303,8 +309,8 @@
 
             let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
 
-            // Enforce form compliance validations rules
-            if (!name || !market || !phone || !street || !building || !apartment) {
+            // Enforce form compliance validations rules including the brand new City field
+            if (!name || !market || !phone || !city || !street || !building || !apartment) {
                 alert('Verification Error: Please fill out all required fields before attempting to place your order.');
                 return;
             }
@@ -331,9 +337,9 @@
                 clientName: name,
                 marketName: market,
                 phone: phone,
-                itemsSummary: orderedItemsSummary,
-                location: `Street: ${street}, Bldg: ${building}, Apt/Shop: ${apartment}`,
+                location: `City: ${city}, Street: ${street}, Bldg: ${building}, Apt/Shop: ${apartment}`,
                 driverInstructions: driverNotes || 'None specified',
+                itemsSummary: orderedItemsSummary,
                 totalCost: `$${finalNetCostValue.toFixed(2)} USD`,
                 status: 'Pending Review',
                 eta: 'Awaiting dispatch scheduling'
@@ -343,13 +349,28 @@
             globalOrdersPool.push(orderPayloadDataPackage);
             localStorage.setItem('gramless_orders', JSON.stringify(globalOrdersPool));
 
+            // Format order parameter lines into an urgent corporate dispatch text block for WhatsApp tracking
+            const messageString = `🚨 *GRAMLESS NEW ORDER LOGGED* 🚨\n\n` +
+                                  `• *Order ID:* ${corporateTrackingCode}\n` +
+                                  `• *User Email:* ${authenticatedUserSession.email}\n` +
+                                  `• *Market:* ${market}\n` +
+                                  `• *Contact:* ${name} (${phone})\n` +
+                                  `• *Items:* ${orderedItemsSummary}\n` +
+                                  `• *City/Region:* ${city}\n` +
+                                  `• *Address:* ${street}, ${building}, ${apartment}\n` +
+                                  `• *Driver Notes:* ${driverNotes || 'None'}\n` +
+                                  `• *Bill Total:* $${finalNetCostValue.toFixed(2)} USD`;
+
+            const adminWhatsAppNumber = "96171601621"; 
+            const whatsappDispatchLink = `https://whatsapp.com{adminWhatsAppNumber}&text=${encodeURIComponent(messageString)}`;
+
             // Clean basket array memory records clean out
             localStorage.removeItem('gramless_cart');
 
             alert(`🎉 Order ${corporateTrackingCode} Submitted Successfully!\n\nYour address and driver notes have been sent to our dispatch team. You will receive a direct delivery timeline confirmation notification shortly.`);
             
-            // Instantly send the user back to the home portal screen
-            window.location.href = 'home.html';
+            // Send information to WhatsApp and return to home page
+            window.location.href = whatsappDispatchLink;
         }
     </script>
 </body>
