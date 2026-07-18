@@ -125,10 +125,8 @@
                 </div>
             </div>
 
-            <!-- CUSTOMER ORDER STATUS TRACKING BADGES -->
-            <div class="client-tracking-section">
-                <h3 class="tracking-header">My Live Order Tracking</h3>
-    <!-- CORPORATE EXECUTION LOGIC SCRIPTS -->
+            
+        <!-- CORPORATE EXECUTION LOGIC SCRIPTS -->
     <script>
         // Security gate check sequence parameters
         const currentUserData = JSON.parse(sessionStorage.getItem('currentUser'));
@@ -151,7 +149,6 @@
             } else {
                 document.getElementById('client-view-container').classList.remove('hidden');
                 document.getElementById('admin-view-container').classList.add('hidden');
-                renderClientTrackingFeed(currentUserData.email);
                 calculateStickyBasketQuantities();
             }
         };
@@ -161,53 +158,13 @@
         }
 
         function calculateStickyBasketQuantities() {
-    let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
-    let quantityCountAccumulator = 0;
-    
-    cartItems.forEach(item => { 
-        quantityCountAccumulator += parseInt(item.qty); 
-    });
-    
-    // 🚨 ADD THIS LINE RIGHT HERE: This removes the hidden class and forces the bar to appear!
-    document.querySelector('.cart-sticky-bar').classList.remove('hidden');
-    
-    document.getElementById('home-cart-badge').innerText = quantityCountAccumulator;
-}
-
-
-        // --- CLIENT REAL-TIME TRACKING FEED VIEW ---
-        function renderClientTrackingFeed(clientEmail) {
-            const listContainer = document.getElementById('client-tracking-list-stack');
-            let globalOrdersList = JSON.parse(localStorage.getItem('gramless_orders')) || [];
-
-            // Filter out only the records matching this buyer profile signature email log
-            let myPersonalOrders = globalOrdersList.filter(order => order.userAccountEmail === clientEmail);
-
-            if (myPersonalOrders.length === 0) {
-                listContainer.innerHTML = `<p style="color:var(--text-muted); padding:10px 0; font-size:0.95rem;">You haven't logged any company rice shipment requests yet.</p>`;
-                return;
-            }
-
-            // Build feed display loops array reverse sorted (Latest logs on top)
-            listContainer.innerHTML = myPersonalOrders.reverse().map(order => {
-                const badgeStyleClass = order.status === 'Delivered' ? 'delivered' : 'pending';
-                return `
-                    <div class="tracking-card">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                            <span style="font-weight:700; color:var(--text-dark);">${order.id}</span>
-                            <span style="font-size:0.9rem; font-weight:700; color:#C9A304;">${order.totalCost}</span>
-                        </div>
-                        <p style="font-size:0.92rem; color:var(--text-dark); margin-bottom:8px;">
-                            <strong>Items:</strong> ${order.itemsSummary}<br>
-                            <strong>To:</strong> ${order.location}
-                        </p>
-                        <div style="background:var(--gray-light); padding:10px; border-radius:8px; font-size:0.9rem; border-left:3px solid var(--primary-yellow);">
-                            <strong>Delivery Timeline Status:</strong> <span style="color:#A18200; font-weight:700;">${order.eta}</span>
-                        </div>
-                        <span class="tracking-status-badge ${badgeStyleClass}">${order.status}</span>
-                    </div>
-                `;
-            }).join('');
+            let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
+            let quantityCountAccumulator = 0;
+            cartItems.forEach(item => { quantityCountAccumulator += parseInt(item.qty); });
+            
+            // Forces the bar to show up and stay perfectly visible at the bottom
+            document.querySelector('.cart-sticky-bar').classList.remove('hidden');
+            document.getElementById('home-cart-badge').innerText = quantityCountAccumulator;
         }
 
         // --- ADMIN COMMAND CENTER DESK LEDGER VIEWS ---
@@ -269,17 +226,16 @@
             const inputVal = etaInput.value.trim();
 
             if (!inputVal) {
-                alert('Input Error: Please type an estimated arrival window timeframe statement string description first before clicking notify.');
+                alert('Input Error: Please type an estimated arrival window.');
                 return;
             }
 
             let globalOrdersList = JSON.parse(localStorage.getItem('gramless_orders')) || [];
             
-            // Apply text notification payload values down into specific structural arrays parameters keys mapping values
-            globalOrdersPool[arrayTargetIndex].eta = "In Transit - Expected " + inputVal;
-            globalOrdersPool[arrayTargetIndex].status = "In Transit";
+            globalOrdersList[arrayTargetIndex].eta = "In Transit - Expected " + inputVal;
+            globalOrdersList[arrayTargetIndex].status = "In Transit";
 
-            localStorage.setItem('gramless_orders', JSON.stringify(globalOrdersPool));
+            localStorage.setItem('gramless_orders', JSON.stringify(globalOrdersList));
             alert('Notification successfully pushed back onto the target customer\'s dashboard tracking card!');
             
             // Re-render layout grid updates
@@ -287,12 +243,12 @@
         }
 
         function markOrderAsFullyDelivered(arrayTargetIndex) {
-            let globalOrdersPool = JSON.parse(localStorage.getItem('gramless_orders')) || [];
+            let globalOrdersList = JSON.parse(localStorage.getItem('gramless_orders')) || [];
             
-            globalOrdersPool[arrayTargetIndex].status = "Delivered";
-            globalOrdersPool[arrayTargetIndex].eta = "Arrived & Safely Received";
+            globalOrdersList[arrayTargetIndex].status = "Delivered";
+            globalOrdersList[arrayTargetIndex].eta = "Arrived & Safely Received";
 
-            localStorage.setItem('gramless_orders', JSON.stringify(globalOrdersPool));
+            localStorage.setItem('gramless_orders', JSON.stringify(globalOrdersList));
             alert('Order records updated successfully! Ticket marked closed and archived.');
             
             renderAdminOrderDesk();
