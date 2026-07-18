@@ -313,6 +313,32 @@
                 </div>
             </div>
         </div>
+<!-- 🚚 DRIVER INSTRUCTIONS CONTAINER -->
+<div class="section-card">
+    <h3 class="section-title">Driver Instructions</h3>
+    <textarea id="driver-notes-input" class="driver-textarea" placeholder="Add specific guidance directions, landmarks, or preferred delivery timing rules here..."></textarea>
+</div>
+        <!-- 🛒 FIXED BOTTOM ACTIONS CONSOLE BAR -->
+<div class="fixed-checkout-console-footer">
+    <a href="home.html" class="btn-add-items-link">Add items</a>
+    <button class="btn-place-order-action" onclick="commitFinalCorporateOrder()">
+        <span>Place Order</span>
+        <span id="footer-checkout-price" class="footer-price-display">$0.00</span>
+    </button>
+</div>
+<!-- 🎉 REDIRECT SUCCESS MODAL POPUP -->
+<div id="success-modal-overlay" class="success-popup-backdrop">
+    <div class="success-popup-card">
+        <div style="font-size: 3rem; margin-bottom: 10px;">🎉</div>
+        <h3 class="success-popup-title">Order Logged Successfully!</h3>
+        <p class="success-popup-msg">Your address credentials and items have been saved. Tap the button below to transfer your invoice straight to the GramLess dispatch desk.</p>
+        
+        <a id="modal-whatsapp-link-anchor" href="#" target="_blank" class="btn-modal-whatsapp-trigger" onclick="forceReturnToHomePageState()">
+            Send to Admin & Return Home
+        </a>
+    </div>
+</div>
+
 
         <!-- 🚚 DRIVER INSTRUCTIONS INPUT CARD -->
 <script>
