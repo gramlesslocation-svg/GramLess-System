@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GramLess - Checkout Dispatch</title>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --text-dark: #1C1C1C;
+            --text-muted: #757575;
+            --primary-yellow: #FFDE4D;
+            --yellow-hover: #E5C740;
+            --border-color: #F0F0F2;
+            --gray-light: #F7F7F9;
+            --error-red: #FF3B30;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #FAFAFB;
+            color: var(--text-dark);
+            padding-bottom: 160px; /* Safety spacing so your bottom buttons never hide behind text fields */
+            display: flex;
+            justify-content: center;
+        }
+
+        .checkout-wrapper {
+            width: 100%;
+            max-width: 550px;
+            background-color: #FFFFFF;
+            min-height: 100vh;
+            padding: 24px 20px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.02);
+        }
+
+        /* Top Navigation Header */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 1.6rem;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+
+        .nav-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            margin-left: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        /* Top Alert Banner */
+        .notice-banner {
+            background-color: #FFFDEB;
+            border: 1px solid #FFE885;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 24px;
+            font-size: 0.92rem;
+            color: #7A6500;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        /* Section Container Cards */
+        .section-card {
+            background-color: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 20px;
+            color: var(--bg-dark);
+            border-left: 4px solid var(--primary-yellow);
+            padding-left: 10px;
+        }
+
+        .form-grid-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-group-block {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group-block label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .form-group-block label span { color: var(--error-red); }
+
+        .form-group-block input {
+            padding: 12px 14px;
+            border: 1px solid #E5E5EA;
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+            background-color: var(--gray-light);
+        }
+
+        .form-group-block input:focus {
+            border-color: var(--bg-dark);
+            background-color: #FFFFFF;
+        }
+
+        /* 🚚 Driver Instructions Box */
+        .driver-textarea {
+            width: 100%;
+            height: 100px;
+            padding: 14px;
+            border: 1px solid #E5E5EA;
+            border-radius: 10px;
+            font-size: 0.98rem;
+            outline: none;
+            resize: none;
+            background-color: var(--gray-light);
+        }
+
+        .driver-textarea:focus {
+            border-color: var(--bg-dark);
+            background-color: #FFFFFF;
+        }
+
+        /* 🛒 FIXED BOTTOM ACTIONS CONSOLE BAR */
+        .fixed-checkout-console-footer {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 550px;
+            background-color: #FFFFFF;
+            border-top: 1px solid var(--border-color);
+            padding: 18px 20px 28px 20px;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            box-shadow: 0 -6px 25px rgba(0,0,0,0.06);
+            z-index: 9999;
+        }
+
+        .btn-add-items-link {
+            flex: 1;
+            background-color: #FFFFFF;
+            color: var(--text-dark);
+            border: 2px solid var(--bg-dark);
+            padding: 16px 10px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .btn-add-items-link:hover {
+            background-color: var(--gray-light);
+        }
+
+        .btn-place-order-action {
+            flex: 1.8;
+            background-color: var(--bg-dark);
+            color: #FFFFFF;
+            border: none;
+            padding: 16px 20px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-price-display {
+            color: var(--primary-yellow);
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        /* Redirect Popup Backdrop */
+        .success-popup-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(18, 18, 18, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 100000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .success-popup-card {
+            background-color: #FFFFFF;
+            width: 100%;
+            max-width: 460px;
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .success-popup-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .success-popup-msg {
+            font-size: 0.98rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .btn-modal-whatsapp-trigger {
+            width: 100%;
+            background-color: #00A887;
+            color: #FFFFFF;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="checkout-wrapper">
+        <div class="top-nav">
+            <button class="back-btn" onclick="window.location.href='cart.html'">&larr;</button>
+            <h2 class="nav-title">Checkout</h2>
+        </div>
+
+        <div class="notice-banner">
+            🔔 <strong>GramLess Alert:</strong> You will receive a direct delivery confirmation timeline notification shortly after placing your order.
+        </div>
+
+        <div class="section-card">
+            <h3 class="section-title">Delivery Location & Contact</h3>
+            <div class="form-grid-wrapper">
+                <div class="form-group-block">
+                    <label>Contact Name <span>*</span></label>
+                    <input type="text" id="field-name" placeholder="e.g., John Doe" required>
+                </div>
+                <div class="form-group-block">
+                    <label>Market / Company Name <span>*</span></label>
+                    <input type="text" id="field-market" placeholder="e.g., Central Rice Supermarket" required>
+                </div>
+                <div class="form-group-block">
+                    <label>Phone Number <span>*</span></label>
+                    <input type="tel" id="field-phone" placeholder="e.g., +961 71 123 456" required>
+                </div>
+                <div class="form-group-block">
+                    <label>City / Region <span>*</span></label>
+                    <input type="text" id="field-city" placeholder="e.g., Antelias, Dekwaneh, Jounieh..." required>
+                </div>
+                <div class="form-group-block">
+                    <label>Street Name <span>*</span></label>
+                    <input type="text" id="field-street" placeholder="e.g., Main Commercial Highway" required>
+                </div>
+                <div class="form-group-block">
+                    <label>Building Name/No. <span>*</span></label>
+                    <input type="text" id="field-building" placeholder="e.g., Al-Anwar Tower, Block B" required>
+                </div>
+                <div class="form-group-block">
+                    <label>Apartment / Shop / Suite No. <span>*</span></label>
+                    <input type="text" id="field-apartment" placeholder="e.g., Ground Floor Shop No. 4" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🚚 DRIVER INSTRUCTIONS INPUT CARD -->
+<script>
+        const authenticatedUserSession = JSON.parse(sessionStorage.getItem('currentUser')) || { email: "unregistered_client@gramless.com", name: "GramLess Customer" };
+
+        window.onload = function() {
+            calculateCheckoutTotals();
+        };
+
+        function calculateCheckoutTotals() {
+            let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
+            let subtotalAccumulator = 0;
+
+            cartItems.forEach(item => {
+                subtotalAccumulator += (item.price * item.qty);
+            });
+
+            document.getElementById('footer-checkout-price').innerText = `$${subtotalAccumulator.toFixed(2)}`;
+        }
+
+        function commitFinalCorporateOrder() {
+            const name = document.getElementById('field-name').value.trim();
+            const market = document.getElementById('field-market').value.trim();
+            const phone = document.getElementById('field-phone').value.trim();
+            const city = document.getElementById('field-city').value.trim();
+            const street = document.getElementById('field-street').value.trim();
+            const building = document.getElementById('field-building').value.trim();
+            const apartment = document.getElementById('field-apartment').value.trim();
+            const driverNotes = document.getElementById('driver-notes-input').value.trim();
+
+            let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
+
+            if (!name || !market || !phone || !city || !street || !building || !apartment) {
+                alert('Verification Error: Please fill out all required fields before attempting to place your order.');
+                return;
+            }
+
+            if (cartItems.length === 0) {
+                alert('Your checkout cart is empty! Return to the product list to add choices.');
+                return;
+            }
+
+            let globalOrdersPool = JSON.parse(localStorage.getItem('gramless_orders')) || [];
+            let orderedItemsSummary = cartItems.map(item => `${item.qty}x ${item.name} (${item.size}KG)`).join(', ');
+
+            let finalNetCostValue = 0;
+            cartItems.forEach(item => { finalNetCostValue += (item.price * item.qty); });
+
+            const corporateTrackingCode = 'ORD-' + Math.floor(30000 + Math.random() * 60000);
+
+            // Save order completely into your database log array
+            globalOrdersPool.push({
+                id: corporateTrackingCode,
+                userAccountEmail: authenticatedUserSession.email,
+                clientName: name,
+                marketName: market,
+                phone: phone,
+                location: `City: ${city}, Street: ${street}, Bldg: ${building}, Apt/Shop: ${apartment}`,
+                driverInstructions: driverNotes || 'None specified',
+                itemsSummary: orderedItemsSummary,
+                totalCost: `$${finalNetCostValue.toFixed(2)} USD`,
+                status: 'Pending Review',
+                eta: 'Awaiting dispatch scheduling'
+            });
+
+            localStorage.setItem('gramless_orders', JSON.stringify(globalOrdersPool));
+
+            // Compile information parameters block text structure for admin phones
+            const messageString = `🚨 *GRAMLESS NEW ORDER LOGGED* 🚨\n\n` +
+                                  `• *Order ID:* ${corporateTrackingCode}\n` +
+                                  `• *User Email:* ${authenticatedUserSession.email}\n` +
+                                  `• *Market Name:* ${market}\n` +
+                                  `• *Contact:* ${name} (${phone})\n` +
+                                  `• *Items Ordered:* ${orderedItemsSummary}\n` +
+                                  `• *City/Region:* ${city}\n` +
+                                  `• *Full Address:* ${street}, ${building}, ${apartment}\n` +
+                                  `• *Driver Notes:* ${driverNotes || 'None'}\n` +
+                                  `• *Bill Grand Total:* $${finalNetCostValue.toFixed(2)} USD`;
+
+            const adminWhatsAppNumber = "96171601621"; 
+            const whatsappDispatchLink = `https://whatsapp.com{adminWhatsAppNumber}&text=${encodeURIComponent(messageString)}`;
+
+            // Reset shopping basket memory clean out
+            localStorage.removeItem('gramless_cart');
+
+            // Attach URL to overlay modal action link anchor
+            document.getElementById('modal-whatsapp-link-anchor').href = whatsappDispatchLink;
+
+            // Open up verification overlay card layout panel container on screen
+            document.getElementById('success-modal-overlay').style.display = 'flex';
+        }
+
+        function forceReturnToHomePageState() {
+            setTimeout(function() {
+                window.location.href = 'home.html';
+            }, 300);
+        }
+    </script>
+</body>
+</html>
