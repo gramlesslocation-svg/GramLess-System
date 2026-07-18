@@ -161,11 +161,19 @@
         }
 
         function calculateStickyBasketQuantities() {
-            let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
-            let quantityCountAccumulator = 0;
-            cartItems.forEach(item => { quantityCountAccumulator += parseInt(item.qty); });
-            document.getElementById('home-cart-badge').innerText = quantityCountAccumulator;
-        }
+    let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
+    let quantityCountAccumulator = 0;
+    
+    cartItems.forEach(item => { 
+        quantityCountAccumulator += parseInt(item.qty); 
+    });
+    
+    // 🚨 ADD THIS LINE RIGHT HERE: This removes the hidden class and forces the bar to appear!
+    document.querySelector('.cart-sticky-bar').classList.remove('hidden');
+    
+    document.getElementById('home-cart-badge').innerText = quantityCountAccumulator;
+}
+
 
         // --- CLIENT REAL-TIME TRACKING FEED VIEW ---
         function renderClientTrackingFeed(clientEmail) {
