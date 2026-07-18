@@ -250,30 +250,36 @@
 
         // Handle User Login verification
         function handleLogin(event) {
-            event.preventDefault();
+    event.preventDefault();
 
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value.trim();
 
-            // System Master Admin bypass account
-            if (email === 'admin@gramless.com' && password === 'admin123') {
-                alert('Welcome back, Chief Admin!');
-                window.location.href = 'home.html';
-                return;
-            }
+    // 1. MASTER OPERATIONAL ADMIN OVERRIDE GATEWAY
+    if (email === 'admin@gramless.com' && password === 'admin123') {
+        const masterAdmin = { name: 'System Admin', role: 'admin', email: email };
+        sessionStorage.setItem('currentUser', JSON.stringify(masterAdmin));
+        
+        // Forced browser jump hook to kill loading freezes completely
+        window.location.replace('home.html');
+        return;
+    }
 
-            // Check stored user accounts
-            let users = JSON.parse(localStorage.getItem('gramless_users')) || [];
-            const matchedUser = users.find(u => u.email === email && u.password === password);
+    // 2. REGULAR CLIENT ACCOUNT GATEWAY
+    let users = JSON.parse(localStorage.getItem('gramless_users')) || [];
+    const matchedUser = users.find(u => u.email === email && u.password === password);
 
-            if (matchedUser) {
-                alert(`Login successful. Welcome back, ${matchedUser.name}!`);
-                // Go straight to your separate home.html file
-                window.location.href = 'home.html';
-            } else {
-                alert('Invalid email credentials or incorrect password.');
-            }
-        }
+    if (matchedUser) {
+        sessionStorage.setItem('currentUser', JSON.stringify(matchedUser));
+        
+        // Forced browser jump hook to kill loading freezes completely
+        window.location.replace('home.html');
+    } else {
+        alert('Invalid email credentials or incorrect password.');
+    }
+}
+
+        
     </script>
 </body>
 </html>
