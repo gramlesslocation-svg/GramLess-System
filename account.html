@@ -374,23 +374,123 @@ function saveAddressSettingsProfile() {
     alert('Delivery address profile saved successfully!');
 }
 
-// 🌐 THE LANGUAGE TRANSLATIONS SWITCHER INTERFACE TOGGLE
+        // 🌐 FULL GRAMLESS REAL-TIME TRANSLATION ENGINE
 function switchAppLanguage(langCode) {
     const btnEn = document.getElementById('lang-en');
     const btnAr = document.getElementById('lang-ar');
 
+    // Official Translation Dictionary
+    const translations = {
+        en: {
+            navTitle: "Account Settings",
+            profileTitle: "My Profile",
+            lblCompany: "Company / Full Name",
+            lblEmail: "Registered Email Address",
+            lblNickname: "Custom Nickname",
+            lblPhone: "Primary Phone Number",
+            btnSaveProfile: "Save Profile Changes",
+            securityTitle: "Security & Credentials",
+            lblPassword: "New Password",
+            btnChangePass: "Change Password",
+            addressTitle: "Saved Delivery Address",
+            lblCity: "City / Region",
+            lblStreet: "Street Name",
+            lblBuilding: "Building Name/No.",
+            lblApartment: "Apartment / Shop / Suite No.",
+            btnSaveAddress: "Save Address Profile",
+            dangerTitle: "Danger Zone",
+            btnSignOut: "Sign Out",
+            btnDelete: "Delete Account Permanently",
+            placeNickname: "e.g., Trader Bob",
+            placePhone: "e.g., +961 70 123 456",
+            placeCity: "e.g., Antelias, Dekwaneh...",
+            placeStreet: "e.g., Main Commercial Highway",
+            placeBuilding: "e.g., Al-Anwar Tower, Block B",
+            placeApartment: "e.g., Ground Floor Shop No. 4"
+        },
+        ar: {
+            navTitle: "إعدادات الحساب",
+            profileTitle: "ملفي الشخصي",
+            lblCompany: "اسم الشركة / الاسم الكامل",
+            lblEmail: "البريد الإلكتروني المسجل",
+            lblNickname: "الاسم المستعار",
+            lblPhone: "رقم الهاتف الأساسي",
+            btnSaveProfile: "حفظ تغييرات الملف الشخصي",
+            securityTitle: "الأمان وبيانات الاعتماد",
+            lblPassword: "كلمة مرور جديدة",
+            btnChangePass: "تغيير كلمة المرور",
+            addressTitle: "عنوان التوصيل المحفوظ",
+            lblCity: "المدينة / المنطقة",
+            lblStreet: "اسم الشارع",
+            lblBuilding: "اسم / رقم البناية",
+            lblApartment: "رقم الشقة / المحل / الجناح",
+            btnSaveAddress: "حفظ ملف العنوان",
+            dangerTitle: "منطقة الخطر",
+            btnSignOut: "تسجيل الخروج",
+            btnDelete: "حذف الحساب نهائياً",
+            placeNickname: "مثال: تاجر بوب",
+            placePhone: "مثال: ٤٥٦ ١٢٣ ٧٠ ٩٦١+",
+            placeCity: "مثال: انطلياس، الدكوانة...",
+            placeStreet: "مثال: الأوتوستراد التجاري العام",
+            placeBuilding: "مثال: برج الأنوار، بلوك ب",
+            placeApartment: "مثال: الطابق الأرضي، محل رقم ٤"
+        }
+    };
+
+    const text = translations[langCode];
+
+    // 1. Toggle Button UI Highlights
     if (langCode === 'ar') {
         btnAr.style.background = 'var(--primary-yellow)'; btnAr.style.color = 'var(--bg-dark)';
         btnEn.style.background = 'var(--gray-light)'; btnEn.style.color = '#FFF';
-        alert('Language switched to Arabic! (Dashboard localization hooks are fully synchronized.)');
+        document.body.style.direction = 'rtl'; // Flips page layout nicely for Arabic text reading
     } else {
         btnEn.style.background = 'var(--primary-yellow)'; btnEn.style.color = 'var(--bg-dark)';
         btnAr.style.background = 'var(--gray-light)'; btnAr.style.color = '#FFF';
-        alert('Language switched to English!');
+        document.body.style.direction = 'ltr'; // Returns page layout to standard Western reading
     }
+
+    // 2. Inject Translated Text Strings into the layout nodes
+    document.querySelector('.nav-title').innerText = text.navTitle;
+    
+    const titles = document.querySelectorAll('.section-title');
+    if(titles[0]) titles[0].innerText = text.profileTitle;
+    if(titles[1]) titles[1].innerText = text.securityTitle;
+    if(titles[2]) titles[2].innerText = text.addressTitle;
+    if(titles[3]) titles[3].innerText = text.dangerTitle;
+
+    const labels = document.querySelectorAll('.form-group-block label');
+    if(labels[0]) labels[0].innerText = text.lblCompany;
+    if(labels[1]) labels[1].innerText = text.lblEmail;
+    if(labels[2]) labels[2].innerText = text.lblNickname;
+    if(labels[3]) labels[3].innerText = text.lblPhone;
+    if(labels[4]) labels[4].innerText = text.lblPassword;
+    if(labels[5]) labels[5].innerText = text.lblCity;
+    if(labels[6]) labels[6].innerText = text.lblStreet;
+    if(labels[7]) labels[7].innerText = text.lblBuilding;
+    if(labels[8]) labels[8].innerText = text.lblApartment;
+
+    const buttons = document.querySelectorAll('.section-card button');
+    // Index mapping matching your button locations on screen
+    const primaryBtns = document.querySelectorAll('.btn-primary-action');
+    if(primaryBtns[0]) primaryBtns[0].innerText = text.btnSaveProfile;
+    if(primaryBtns[1]) primaryBtns[1].innerText = text.btnChangePass;
+    if(primaryBtns[2]) primaryBtns[2].innerText = text.btnSaveAddress;
+
+    const dangerBtns = document.querySelectorAll('.btn-danger-action');
+    if(dangerBtns[0]) dangerBtns[0].innerText = text.btnSignOut;
+    if(dangerBtns[1]) dangerBtns[1].innerText = text.btnDelete;
+
+    // 3. Inject Translated Placeholders so inputs match language choices
+    document.getElementById('input-nickname').placeholder = text.placeNickname;
+    document.getElementById('input-phone').placeholder = text.placePhone;
+    document.getElementById('input-city').placeholder = text.placeCity;
+    document.getElementById('input-street').placeholder = text.placeStreet;
+    document.getElementById('input-building').placeholder = text.placeBuilding;
+    document.getElementById('input-apartment').placeholder = text.placeApartment;
 }
 
-        
+
     </script>
 </body>
 </html>
