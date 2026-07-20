@@ -220,14 +220,18 @@
             </div>
         </div>
 
-        <div class="cart-sticky-bar">
-            <div class="cart-left-status">
-                <div id="home-cart-badge" class="cart-quantity-badge">0</div>
-                <div class="cart-status-text">Items in your cart</div>
-            </div>
-            <button class="btn-view-cart" onclick="window.location.href='cart.html'">View Cart</button>
-        </div>
+        <!--STICKY BOTTOM ACTIONS FOOTER BAR (SIDE-BY-SIDE DESIGN) -->
+<div class="cart-sticky-bar">
+    <div class="cart-left-status" style="cursor: pointer;" onclick="window.location.href='cart.html'">
+        <div id="home-cart-badge" class="cart-quantity-badge">0</div>
+        <div class="cart-status-text">Items in your cart</div>
     </div>
+    <div style="display: flex; gap: 8px;">
+        <button class="btn-view-cart" onclick="window.location.href='cart.html'">View Cart</button>
+        <!-- 👤 BRAND NEW ACCOUNT BUTTON -->
+        <button class="btn-view-cart" style="border-color: #FFFFFF; color: #FFFFFF;" onclick="window.location.href='account.html'">Account</button>
+    </div>
+</div>
 
     <script>
         // Check active role credentials in secure drawer
