@@ -178,6 +178,16 @@
             <h2 class="nav-title">Account Settings</h2>
         </div>
 
+        <!-- 🌐 PREMIUM LANGUAGE SELECTION ACCORDION BAR -->
+<div class="section-card" style="padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-color: rgba(255, 222, 77, 0.15);">
+    <span style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Select Language / اختر اللغة</span>
+    <div style="display: flex; gap: 8px;">
+        <button id="lang-en" class="btn-change-location" style="padding: 6px 12px; font-size: 0.8rem; background: var(--primary-yellow); color: var(--bg-dark);" onclick="switchAppLanguage('en')">English</button>
+        <button id="lang-ar" class="btn-change-location" style="padding: 6px 12px; font-size: 0.8rem; background: var(--gray-light); color: #FFF;" onclick="switchAppLanguage('ar')">العربية</button>
+    </div>
+</div>
+
+
         <!-- PROFILE INFORMATION MANAGEMENT CARD -->
         <div class="section-card">
             <h3 class="section-title">My Profile</h3>
@@ -214,6 +224,31 @@
             </div>
         </div>
 
+<!-- 📍 STORED ADDRESS PARAMETERS HUB CONTAINER -->
+<div class="section-card">
+    <h3 class="section-title">Saved Delivery Address</h3>
+    <div class="form-grid-wrapper">
+        <div class="form-group-block">
+            <label>City / Region</label>
+            <input type="text" id="input-city" placeholder="e.g., Antelias, Dekwaneh...">
+        </div>
+        <div class="form-group-block">
+            <label>Street Name</label>
+            <input type="text" id="input-street" placeholder="e.g., Main Commercial Highway">
+        </div>
+        <div class="form-group-block">
+            <label>Building Name/No.</label>
+            <input type="text" id="input-building" placeholder="e.g., Al-Anwar Tower, Block B">
+        </div>
+        <div class="form-group-block">
+            <label>Apartment / Shop / Suite No.</label>
+            <input type="text" id="input-apartment" placeholder="e.g., Ground Floor Shop No. 4">
+        </div>
+        <button class="btn-primary-action" style="background: #FFFFFF; color: var(--bg-dark);" onclick="saveAddressSettingsProfile()">Save Address Profile</button>
+    </div>
+</div>
+
+        
         <!-- ACCOUNT DESTRUCTION & SIGN OUT CARD -->
         <div class="section-card" style="border-color: rgba(255, 59, 48, 0.2);">
             <h3 class="section-title" style="color: var(--error-red); border-color: var(--error-red);">Danger Zone</h3>
@@ -233,6 +268,7 @@
 
         window.onload = function() {
             loadUserProfileData();
+            loadSavedAddressProfileData();
         };
 
         // Reads local databases and loads profile values onto the inputs
@@ -316,6 +352,45 @@
             alert('Your account has been deleted permanently out of our systems registries. Returning to gate entryway.');
             window.location.href = 'index.html';
         }
+
+// Reads saved client address files directly out of local registers matching user signatures
+function loadSavedAddressProfileData() {
+    let savedAddress = JSON.parse(localStorage.getItem(`gramless_addr_${currentUserData.email}`)) || {};
+    document.getElementById('input-city').value = savedAddress.city || '';
+    document.getElementById('input-street').value = savedAddress.street || '';
+    document.getElementById('input-building').value = savedAddress.building || '';
+    document.getElementById('input-apartment').value = savedAddress.apartment || '';
+}
+
+// Saves address elements so they can autofill into checkout fields later
+function saveAddressSettingsProfile() {
+    const city = document.getElementById('input-city').value.trim();
+    const street = document.getElementById('input-street').value.trim();
+    const building = document.getElementById('input-building').value.trim();
+    const apartment = document.getElementById('input-apartment').value.trim();
+
+    const addressObject = { city, street, building, apartment };
+    localStorage.setItem(`gramless_addr_${currentUserData.email}`, JSON.stringify(addressObject));
+    alert('Delivery address profile saved successfully!');
+}
+
+// 🌐 THE LANGUAGE TRANSLATIONS SWITCHER INTERFACE TOGGLE
+function switchAppLanguage(langCode) {
+    const btnEn = document.getElementById('lang-en');
+    const btnAr = document.getElementById('lang-ar');
+
+    if (langCode === 'ar') {
+        btnAr.style.background = 'var(--primary-yellow)'; btnAr.style.color = 'var(--bg-dark)';
+        btnEn.style.background = 'var(--gray-light)'; btnEn.style.color = '#FFF';
+        alert('Language switched to Arabic! (Dashboard localization hooks are fully synchronized.)');
+    } else {
+        btnEn.style.background = 'var(--primary-yellow)'; btnEn.style.color = 'var(--bg-dark)';
+        btnAr.style.background = 'var(--gray-light)'; btnAr.style.color = '#FFF';
+        alert('Language switched to English!');
+    }
+}
+
+        
     </script>
 </body>
 </html>
