@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GramLess - Account Settings</title>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --card-bg: #1A1A1A;
+            --text-light: #FFFFFF;
+            --text-muted: #A0A0A5;
+            --primary-yellow: #FFDE4D;
+            --yellow-hover: #E5C740;
+            --border-color: #2C2C2E;
+            --gray-light: #242426;
+            --error-red: #FF3B30;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .account-wrapper {
+            width: 100%;
+            max-width: 500px;
+            margin-top: 10px;
+        }
+
+        /* Top Header Layout */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 1.6rem;
+            cursor: pointer;
+            color: var(--primary-yellow);
+            padding-right: 15px;
+        }
+
+        .nav-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        /* Profile Info Section Card */
+        .section-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 20px;
+            color: var(--primary-yellow);
+            border-left: 4px solid var(--primary-yellow);
+            padding-left: 10px;
+        }
+
+        .form-grid-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-group-block {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group-block label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .form-group-block input {
+            padding: 12px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+            background-color: var(--gray-light);
+            color: #FFFFFF;
+            transition: all 0.2s ease;
+        }
+
+        .form-group-block input:focus {
+            border-color: var(--primary-yellow);
+            background-color: var(--bg-dark);
+        }
+
+        .form-group-block input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background-color: rgba(0,0,0,0.2);
+        }
+
+        /* Action Buttons styling */
+        .btn-primary-action {
+            width: 100%;
+            background-color: var(--primary-yellow);
+            color: var(--bg-dark);
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background 0.2s;
+            margin-top: 5px;
+        }
+
+        .btn-primary-action:hover {
+            background-color: var(--yellow-hover);
+        }
+
+        .btn-danger-action {
+            width: 100%;
+            background-color: transparent;
+            color: var(--error-red);
+            border: 2px solid var(--error-red);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .btn-danger-action:hover {
+            background-color: var(--error-red);
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="account-wrapper">
+        <!-- Top App Navigation -->
+        <div class="top-nav">
+            <button class="back-btn" onclick="window.location.href='home.html'">&larr;</button>
+            <h2 class="nav-title">Account Settings</h2>
+        </div>
+
+        <!-- PROFILE INFORMATION MANAGEMENT CARD -->
+        <div class="section-card">
+            <h3 class="section-title">My Profile</h3>
+            <div class="form-grid-wrapper">
+                <div class="form-group-block">
+                    <label>Company / Full Name</label>
+                    <input type="text" id="display-company-name" disabled>
+                </div>
+                <div class="form-group-block">
+                    <label>Registered Email Address</label>
+                    <input type="email" id="display-email" disabled>
+                </div>
+                <div class="form-group-block">
+                    <label>Custom Nickname</label>
+                    <input type="text" id="input-nickname" placeholder="e.g., Trader Bob">
+                </div>
+                <div class="form-group-block">
+                    <label>Primary Phone Number</label>
+                    <input type="tel" id="input-phone" placeholder="e.g., +961 70 123 456">
+                </div>
+                <button class="btn-primary-action" onclick="saveProfileSettings()">Save Profile Changes</button>
+            </div>
+        </div>
+
+        <!-- SECURITY CONTROLS CARD -->
+        <div class="section-card">
+            <h3 class="section-title">Security & Credentials</h3>
+            <div class="form-grid-wrapper">
+                <div class="form-group-block">
+                    <label>New Password</label>
+                    <input type="password" id="input-new-password" placeholder="••••••••">
+                </div>
+                <button class="btn-primary-action" style="background:#FFFFFF; color:var(--bg-dark);" onclick="changeAccountPassword()">Change Password</button>
+            </div>
+        </div>
+
+        <!-- ACCOUNT DESTRUCTION & SIGN OUT CARD -->
+        <div class="section-card" style="border-color: rgba(255, 59, 48, 0.2);">
+            <h3 class="section-title" style="color: var(--error-red); border-color: var(--error-red);">Danger Zone</h3>
+            <button class="btn-danger-action" style="border-color: #757575; color: #FFFFFF;" onclick="handleSignOut()">Sign Out</button>
+            <button class="btn-danger-action" onclick="deleteAccountEntirely()">Delete Account Permanently</button>
+        </div>
+    </div>
+      <!-- PROFILE AND DATA LAYER LOGIC -->
+    <script>
+        // Fetch active account session data from the memory drawer
+        let currentUserData = JSON.parse(sessionStorage.getItem('currentUser'));
+
+        // Boot unauthorized bypass attempts out to log door
+        if (!currentUserData) {
+            window.location.href = 'index.html';
+        }
+
+        window.onload = function() {
+            loadUserProfileData();
+        };
+
+        // Reads local databases and loads profile values onto the inputs
+        function loadUserProfileData() {
+            document.getElementById('display-company-name').value = currentUserData.name;
+            document.getElementById('display-email').value = currentUserData.email;
+
+            // Load saved settings if they exist in local storage profiles
+            let profileMeta = JSON.parse(localStorage.getItem(`gramless_meta_${currentUserData.email}`)) || {};
+            document.getElementById('input-nickname').value = profileMeta.nickname || '';
+            document.getElementById('input-phone').value = profileMeta.phone || '';
+        }
+
+        // Saves user nickname and telephone contact parameters
+        function saveProfileSettings() {
+            const nickname = document.getElementById('input-nickname').value.trim();
+            const phone = document.getElementById('input-phone').value.trim();
+
+            const profileMetaObj = { nickname, phone };
+
+            // Save settings assigned directly to this user's email index
+            localStorage.setItem(`gramless_meta_${currentUserData.email}`, JSON.stringify(profileMetaObj));
+            alert('Profile parameters updated successfully!');
+            loadUserProfileData();
+        }
+
+        // Updates user credentials password matrix keys
+        function changeAccountPassword() {
+            const newPassword = document.getElementById('input-new-password').value.trim();
+
+            if (!newPassword) {
+                alert('Please type a new password first!');
+                return;
+            }
+
+            if (newPassword.length < 4) {
+                alert('Security Notice: Your password must be at least 4 characters long.');
+                return;
+            }
+
+            let users = JSON.parse(localStorage.getItem('gramless_users')) || [];
+            let accountRecord = users.find(u => u.email === currentUserData.email);
+
+            if (accountRecord) {
+                accountRecord.password = newPassword; // Overwrite password string key
+                localStorage.setItem('gramless_users', JSON.stringify(users));
+                
+                // Clear out the input field automatically
+                document.getElementById('input-new-password').value = '';
+                alert('Password credentials updated successfully!');
+            } else {
+                alert('Database Error: Account record matching your signature could not be verified.');
+            }
+        }
+
+        // Wipe out login active frames and clear view state
+        function handleSignOut() {
+            sessionStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+
+        // Deletes target profile records clean out of the database array matrices
+        function deleteAccountEntirely() {
+            const confirmation = confirm('⚠️ WARNING: This will permanently delete your GramLess account, your saved address profiles, and all history logs. This action cannot be undone.\n\nAre you absolutely sure you want to delete your account?');
+            
+            if (!confirmation) return;
+
+            let users = JSON.parse(localStorage.getItem('gramless_users')) || [];
+            
+            // Filter specific row profile completely out of database array
+            let updatedUsersPool = users.filter(u => u.email !== currentUserData.email);
+            localStorage.setItem('gramless_users', JSON.stringify(updatedUsersPool));
+
+            // Clean custom extra metrics metadata records clean out
+            localStorage.removeItem(`gramless_meta_${currentUserData.email}`);
+            localStorage.removeItem(`gramless_addr_${currentUserData.email}`);
+
+            // Flush login state keys
+            sessionStorage.removeItem('currentUser');
+            
+            alert('Your account has been deleted permanently out of our systems registries. Returning to gate entryway.');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
+
