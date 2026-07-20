@@ -293,21 +293,21 @@ function applyHomepageTranslations(langCode) {
             searchPlaceholder: "Search for an item or a product...",
             basmatiText: "Premium Basmati",
             cartStatus: "Items in your cart",
-            btnCartView: "View Cart"
-            btnAccountView: "Account"
+            btnCartView: "View Cart",
+            btnAccountView: "Account",
         },
         ar: {
             searchPlaceholder: "ابحث عن منتج أو صنف...",
             basmatiText: "بسمتي نخب أول",
             cartStatus: "القطع المضافة في السلة",
-            btnCartView: "عرض السلة"
-              btnAccountView: "الحساب" 
+            btnCartView: "عرض السلة",
+              btnAccountView: "الحساب" ,
         }
     };
 
     const text = translations[langCode];
     
-    // Flip page reading directional alignment based on language context parameters
+        // Flip page reading directional alignment based on language context parameters
     document.body.style.direction = langCode === 'ar' ? 'rtl' : 'ltr';
 
     // Swap text strings across all matching layout container nodes safely
@@ -317,11 +317,12 @@ function applyHomepageTranslations(langCode) {
     const cartStatusText = document.querySelector('.cart-status-text');
     if (cartStatusText) cartStatusText.innerText = text.cartStatus;
 
-    const cartViewBtn = document.querySelector('.btn-view-cart');
-    if (cartViewBtn) cartViewBtn.innerText = text.btnCartView;
-
-    const accountBtn = document.querySelectorAll('.btn-view-cart')[1]; 
-    if (accountBtn) accountBtn.innerText = text.btnAccountView;
+    // Target both buttons correctly using querySelectorAll
+    const bottomButtons = document.querySelectorAll('.btn-view-cart');
+    if (bottomButtons && bottomButtons.length >= 2) {
+        bottomButtons[0].innerText = text.btnCartView;    // First button is View Cart
+        bottomButtons[1].innerText = text.btnAccountView; // Second button is Account
+    }
         
     // Loop through subtitles list array parameters
     const subtitles = document.querySelectorAll('.product-subtitle');
@@ -333,8 +334,7 @@ function applyHomepageTranslations(langCode) {
         const attributeVal = el.getAttribute(`data-${langCode}`);
         if (attributeVal) el.innerText = attributeVal;
     });
-}
-
+} // 🌟 FIXED: This curly bracket closes your function cleanly now!
         
     </script>
 </body>
