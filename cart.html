@@ -334,14 +334,18 @@
                 const totalItemPrice = item.price * item.qty;
                 netTotalAccumulator += totalItemPrice;
 
-                return `
+                const activeLang = localStorage.getItem('gramless_app_language') || 'en';
+const formattedPriceText = activeLang === 'ar' ? `${(item.price * item.qty).toFixed(2)}$ دولار` : `$${(item.price * item.qty).toFixed(2)}`;
+const formattedSizeText = activeLang === 'ar' ? `${item.size} كيلو` : `${item.size}`;
+
+return `
                     <div class="item-row-card">
                         <div class="item-main-details">
                             <img class="product-thumbnail" src="${item.id}-rice.png" alt="${item.name}" onerror="this.src='https://placehold.co'">
                             <div class="product-meta">
                                 <h4>${item.name}</h4>
-                                <p class="product-meta-weight">${item.size}</p>
-                                <p class="product-meta-price">$${item.price.toFixed(2)}</p>
+                                <p class="product-meta-weight">${formattedSizeText}</p>
+                                <p class="product-meta-price">${formattedPriceText}</p>
                             </div>
                         </div>
                         
@@ -354,6 +358,7 @@
                     </div>
                 `;
             }).join('');
+
 
             document.getElementById('summary-subtotal-price').innerText = `$${netTotalAccumulator.toFixed(2)}`;
             document.getElementById('footer-checkout-price').innerText = `$${netTotalAccumulator.toFixed(2)}`;
@@ -384,6 +389,53 @@
 
             window.location.href = 'checkout.html';
         }
+
+// 🌐 GLOBAL CART PAGE REAL-TIME TRANSLATION ENGINE
+window.addEventListener('DOMContentLoaded', function() {
+    const activeLanguage = localStorage.getItem('gramless_app_language') || 'en';
+    applyCartPageTranslations(activeLanguage);
+});
+
+function applyCartPageTranslations(langCode) {
+    const translations = {
+        en: {
+            navTitle: "My Cart",
+            vendorTitle: "Your Cart",
+            subtotalText: "Subtotal",
+            btnAddItems: "Add items",
+            checkoutText: "Checkout"
+        },
+        ar: {
+            navTitle: "سلتي التموينية",
+            vendorTitle: "محتويات سلتك",
+            subtotalText: "المجموع الفرعي الحالي",
+            btnAddItems: "إضافة منتجات",
+            checkoutText: "الدفع وإرسال الطلب"
+        }
+    };
+
+    const text = translations[langCode];
+    
+    // Flip page layout direction instantly (Right-to-Left or Left-to-Right)
+    document.body.style.direction = langCode === 'ar' ? 'rtl' : 'ltr';
+
+    // Inject matching text values safely into HTML nodes
+    document.querySelector('.nav-title').innerText = text.navTitle;
+    document.querySelector('.vendor-name').innerText = text.vendorTitle;
+    document.querySelector('.subtotal-summary-section span:first-child').innerText = text.subtotalText;
+    document.querySelector('.btn-add-items-link').innerText = text.btnAddItems;
+    document.querySelector('.btn-checkout-corporate-action span:first-child').innerText = text.checkoutText;
+    
+    // Fix subtotal numbers alignment format for Arabic context
+    let rawSubtotalText = document.getElementById('summary-subtotal-price').innerText;
+    let numericValue = rawSubtotalText.replace(/[^0-9.]/g, '');
+    if (numericValue && langCode === 'ar') {
+        document.getElementById('summary-subtotal-price').innerText = `${parseFloat(numericValue).toFixed(2)}$ دولار`;
+        document.getElementById('footer-checkout-price').innerText = `${parseFloat(numericValue).toFixed(2)}$ دولار`;
+    }
+}
+
+        
     </script>
 </body>
 </html>
