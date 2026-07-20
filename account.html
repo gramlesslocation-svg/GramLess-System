@@ -374,8 +374,24 @@ function saveAddressSettingsProfile() {
     alert('Delivery address profile saved successfully!');
 }
 
-        // 🌐 FULL GRAMLESS REAL-TIME TRANSLATION ENGINE
+          
+// 🌐 GLOBAL MEMORY SAVER FOR LANGUAGE SWITCHING
 function switchAppLanguage(langCode) {
+    // Save the selection globally so all other pages can see it instantly
+    localStorage.setItem('gramless_app_language', langCode);
+    
+    // Refresh the current page to force the text translation dictionary to execute immediately
+    window.location.reload();
+}
+
+// 🚀 RUN THE DICTIONARY AUTOMATICALLY ON PAGE LOAD SEQUENCE
+window.addEventListener('DOMContentLoaded', function() {
+    const activeLanguage = localStorage.getItem('gramless_app_language') || 'en';
+    applyAccountTranslations(activeLanguage);
+});
+
+// 🌐 FULL GRAMLESS REAL-TIME TRANSLATION DICTIONARY ENGINE
+function applyAccountTranslations(langCode) {
     const btnEn = document.getElementById('lang-en');
     const btnAr = document.getElementById('lang-ar');
 
@@ -441,16 +457,20 @@ function switchAppLanguage(langCode) {
 
     // 1. Toggle Button UI Highlights
     if (langCode === 'ar') {
-        btnAr.style.background = 'var(--primary-yellow)'; btnAr.style.color = 'var(--bg-dark)';
-        btnEn.style.background = 'var(--gray-light)'; btnEn.style.color = '#FFF';
+        if(btnAr && btnEn) {
+            btnAr.style.background = 'var(--primary-yellow)'; btnAr.style.color = 'var(--bg-dark)';
+            btnEn.style.background = 'var(--gray-light)'; btnEn.style.color = '#FFF';
+        }
         document.body.style.direction = 'rtl'; // Flips page layout nicely for Arabic text reading
     } else {
-        btnEn.style.background = 'var(--primary-yellow)'; btnEn.style.color = 'var(--bg-dark)';
-        btnAr.style.background = 'var(--gray-light)'; btnAr.style.color = '#FFF';
+        if(btnEn && btnAr) {
+            btnEn.style.background = 'var(--primary-yellow)'; btnEn.style.color = 'var(--bg-dark)';
+            btnAr.style.background = 'var(--gray-light)'; btnAr.style.color = '#FFF';
+        }
         document.body.style.direction = 'ltr'; // Returns page layout to standard Western reading
     }
 
-    // 2. Inject Translated Text Strings into the layout nodes
+    // 2. Inject Translated Text Strings into the layout nodes safely
     document.querySelector('.nav-title').innerText = text.navTitle;
     
     const titles = document.querySelectorAll('.section-title');
@@ -470,8 +490,6 @@ function switchAppLanguage(langCode) {
     if(labels[7]) labels[7].innerText = text.lblBuilding;
     if(labels[8]) labels[8].innerText = text.lblApartment;
 
-    const buttons = document.querySelectorAll('.section-card button');
-    // Index mapping matching your button locations on screen
     const primaryBtns = document.querySelectorAll('.btn-primary-action');
     if(primaryBtns[0]) primaryBtns[0].innerText = text.btnSaveProfile;
     if(primaryBtns[1]) primaryBtns[1].innerText = text.btnChangePass;
