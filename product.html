@@ -281,8 +281,11 @@
             const qty = parseInt(document.getElementById('qty-count').value);
             const unitPrice = pricingMatrix[productId][size];
             const totalPrice = unitPrice * qty;
+            
+const activeLang = localStorage.getItem('gramless_app_language') || 'en';
+document.getElementById('display-price').innerText = activeLang === 'ar' ? `${totalPrice.toFixed(2)}$ دولار` : `$${totalPrice.toFixed(2)} USD`;
 
-            document.getElementById('display-price').innerText = `$${totalPrice.toFixed(2)} USD`;
+            
         }
 
         function addToCart() {
@@ -317,6 +320,74 @@
             alert(`Added ${qty} bag(s) of ${productName} (${sizeText}) to your cart!`);
             window.location.href = 'home.html';
         }
+
+// 🌐 GLOBAL PRODUCT PAGE REAL-TIME TRANSLATION ENGINE
+window.addEventListener('DOMContentLoaded', function() {
+    const activeLanguage = localStorage.getItem('gramless_app_language') || 'en';
+    applyProductPageTranslations(activeLanguage);
+});
+
+function applyProductPageTranslations(langCode) {
+    const translations = {
+        en: {
+            backNav: "← Back to Store",
+            category: "Category: <span>Basmati Rice</span>",
+            lblKg: "KG:",
+            optDefault: "Choose an option",
+            optBag1: "0.8KG Bag",
+            optBag2: "2.4KG Bag",
+            optBag3: "9.6KG Bag",
+            btnAddCart: "Add to Cart",
+            selectPrompt: "Select size to show price"
+        },
+        ar: {
+            backNav: "→ العودة إلى المتجر",
+            category: "الفئة: <span>أرز بسمتي</span>",
+            lblKg: "كيلوغرام:",
+            optDefault: "اختر الحجم المناسب",
+            optBag1: "كيس وزن ٠.٨ كيلو",
+            optBag2: "كيس وزن ٢.٤ كيلو",
+            optBag3: "كيس وزن ٩.٦ كيلو",
+            btnAddCart: "إضافة إلى السلة",
+            selectPrompt: "اختر الحجم لإظهار السعر"
+        }
+    };
+
+    const text = translations[langCode];
+    
+    // Set page layout reading alignment direction (Right-to-Left or Left-to-Right)
+    document.body.style.direction = langCode === 'ar' ? 'rtl' : 'ltr';
+
+    // Update text strings across layout nodes safely
+    const backBtn = document.querySelector('.back-nav');
+    if (backBtn) backBtn.innerHTML = text.backNav;
+
+    const categoryText = document.querySelector('.meta-line');
+    if (categoryText) categoryText.innerHTML = text.category;
+
+    const kgLabel = document.querySelector('.selection-label');
+    if (kgLabel) kgLabel.innerText = text.lblKg;
+
+    const addCartBtn = document.querySelector('.btn-add-cart');
+    if (addCartBtn) addCartBtn.innerText = text.btnAddCart;
+
+    // Update default initial price text placeholder if no size is chosen yet
+    const priceDisplay = document.getElementById('display-price');
+    if (priceDisplay && (priceDisplay.innerText.includes('Select size') || priceDisplay.innerText.includes('اختر الحجم'))) {
+        priceDisplay.innerText = text.selectPrompt;
+    }
+
+    // Translate all individual select element dropdown option fields live
+    const select = document.getElementById('weight-dropdown');
+    if (select && select.options.length >= 4) {
+        select.options[0].text = text.optDefault;
+        select.options[1].text = text.optBag1;
+        select.options[2].text = text.optBag2;
+        select.options[3].text = text.optBag3;
+    }
+}
+
+        
     </script>
 </body>
 </html>
