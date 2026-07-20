@@ -447,6 +447,78 @@
     window.open(targetUrl, '_system');
 }
 
+// 🌐 GLOBAL CHECKOUT REAL-TIME TRANSLATION ENGINE
+window.addEventListener('DOMContentLoaded', function() {
+    const activeLanguage = localStorage.getItem('gramless_app_language') || 'en';
+    applyCheckoutPageTranslations(activeLanguage);
+});
+
+function applyCheckoutPageTranslations(langCode) {
+    const translations = {
+        en: {
+            navTitle: "Checkout",
+            notice: "🔔 GramLess Alert: You will receive a direct delivery confirmation timeline notification shortly after placing your order.",
+            sectionTitleAddress: "Delivery Location & Contact",
+            lblName: "Contact Name *", lblMarket: "Market / Company Name *", lblPhone: "Phone Number *", lblCity: "City / Region *", lblStreet: "Street Name *", lblBuilding: "Building Name/No. *", lblApartment: "Apartment / Shop / Suite No. *",
+            sectionTitleDriver: "Driver Instructions",
+            btnPlaceOrder: "Place Order", btnAddItems: "Add items",
+            placeName: "e.g., John Doe", placeMarket: "e.g., Central Rice Supermarket", placePhone: "e.g., +961 71 123 456", placeCity: "e.g., Antelias, Dekwaneh...", placeStreet: "e.g., Main Commercial Highway", placeBuilding: "e.g., Al-Anwar Tower, Block B", placeApartment: "e.g., Ground Floor Shop No. 4", placeDriver: "Add specific guidance directions, landmarks, or preferred delivery timing rules here..."
+        },
+        ar: {
+            navTitle: "إتمام الشراء والدفع",
+            notice: "🔔 تنبيه من غرام ليس: ستتلقى إشعاراً مباشراً بتأكيد الموعد الزمني الدقيق للتوصيل فور إرسال وإقرار طلبك.",
+            sectionTitleAddress: "موقع التوصيل ومعلومات الاتصال",
+            lblName: "اسم جهة الاتصال *", lblMarket: "اسم المحل أو الشركة تجارياً *", lblPhone: "رقم هاتف المحل للتنسيق *", lblCity: "المدينة / المنطقة التابع لها الشحن *", lblStreet: "اسم الشارع الفرعي أو الرئيسي *", lblBuilding: "اسم / رقم المبنى أو المجمع المستهدف *", lblApartment: "رقم الشقة أو المحل التجاري الأرضي *",
+            sectionTitleDriver: "ملاحظات وتوجيهات خاصة بالسائق",
+            btnPlaceOrder: "إرسال وتأكيد الطلب", btnAddItems: "إضافة منتجات",
+            placeName: "مثال: جان خوري", placeMarket: "مثال: سوبرماركت الأرز المركزي", placePhone: "مثال: ٤٥٦ ١٢٣ ٧١ ٩٦١+", placeCity: "مثال: انطلياس، الدكوانة...", placeStreet: "مثال: الأوتوستراد التجاري العام", placeBuilding: "مثال: برج الأنوار، بلوك ب", placeApartment: "مثال: الطابق الأرضي، محل رقم ٤", placeDriver: "أضف توجيهات محددة للسائق أو علامات مميزة للموقع أو أوقات التسليم المفضلة هنا..."
+        }
+    };
+
+    const text = translations[langCode];
+    
+    // Flip page layout direction instantly (Right-to-Left or Left-to-Right)
+    document.body.style.direction = langCode === 'ar' ? 'rtl' : 'ltr';
+
+    // Inject matching text values safely into HTML labels and nodes
+    document.querySelector('.nav-title').innerText = text.navTitle;
+    document.querySelector('.notice-banner').innerText = text.notice;
+    
+    const titles = document.querySelectorAll('.section-title');
+    if (titles[0]) titles[0].innerText = text.sectionTitleAddress;
+    if (titles[1]) titles[1].innerText = text.sectionTitleDriver;
+
+    const labels = document.querySelectorAll('.form-group-block label');
+    if (labels[0]) labels.innerHTML = `${text.lblName}`;
+    if (labels[1]) labels.innerHTML = `${text.lblMarket}`;
+    if (labels[2]) labels.innerHTML = `${text.lblPhone}`;
+    if (labels[3]) labels.innerHTML = `${text.lblCity}`;
+    if (labels[4]) labels.innerHTML = `${text.lblStreet}`;
+    if (labels[5]) labels.innerHTML = `${text.lblBuilding}`;
+    if (labels[6]) labels.innerHTML = `${text.lblApartment}`;
+
+    document.querySelector('.btn-add-items-link').innerText = text.btnAddItems;
+    document.querySelector('.btn-place-order-action span:first-child').innerText = text.btnPlaceOrder;
+
+    // Translate all input placeholders
+    document.getElementById('field-name').placeholder = text.placeName;
+    document.getElementById('field-market').placeholder = text.placeMarket;
+    document.getElementById('field-phone').placeholder = text.placePhone;
+    document.getElementById('field-city').placeholder = text.placeCity;
+    document.getElementById('field-street').placeholder = text.placeStreet;
+    document.getElementById('field-building').placeholder = text.placeBuilding;
+    document.getElementById('field-apartment').placeholder = text.placeApartment;
+    document.getElementById('driver-notes-input').placeholder = text.placeDriver;
+
+    // Fix pricing display formatting for Arabic context inside footer
+    let totalText = document.getElementById('footer-checkout-price').innerText;
+    let numericValue = totalText.replace(/[^0-9.]/g, '');
+    if (numericValue && langCode === 'ar') {
+        document.getElementById('footer-checkout-price').innerText = `${parseFloat(numericValue).toFixed(2)}$ دولار`;
+    }
+}
+
+    
     </script>
 </body>
 </html>
