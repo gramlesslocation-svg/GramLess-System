@@ -200,6 +200,20 @@
 
     <!-- EMBEDDED LOGIC (JAVASCRIPT) -->
     <script>
+
+// 🚀 AUTO-LOGIN SYSTEM: Instantly log the user back in if a record exists
+window.addEventListener('DOMContentLoaded', function() {
+    const autoLoggedInUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (autoLoggedInUser) {
+        if (autoLoggedInUser.email === 'admin@gramless.com') {
+            window.location.replace('admin.html');
+        } else {
+            window.location.replace('home.html');
+        }
+    }
+});
+
+        
         // Switch tabs between Log In and Create Account
         function switchTab(type) {
             const loginForm = document.getElementById('login-form');
@@ -255,13 +269,15 @@
     const email = document.getElementById('login-email').value.trim();
     const password = document.getElementById('login-password').value.trim();
 
-    // 1. MASTER OPERATIONAL ADMIN OVERRIDE GATEWAY
+   
+// 1. MASTER OPERATIONAL ADMIN OVERRIDE GATEWAY
     if (email === 'admin@gramless.com' && password === 'admin123') {
         const masterAdmin = { name: 'System Admin', role: 'admin', email: email };
-        sessionStorage.setItem('currentUser', JSON.stringify(masterAdmin));
+        // 🌟 CHANGED: Saves to localStorage so the admin stays logged in
+        localStorage.setItem('currentUser', JSON.stringify(masterAdmin));
         
         // Forced browser jump hook to kill loading freezes completely
-        window.location.replace('home.html');
+        window.location.replace('admin.html');
         return;
     }
 
@@ -270,7 +286,8 @@
     const matchedUser = users.find(u => u.email === email && u.password === password);
 
     if (matchedUser) {
-        sessionStorage.setItem('currentUser', JSON.stringify(matchedUser));
+        // 🌟 CHANGED: Saves to localStorage so customers stay logged in 
+        localStorage.setItem('currentUser', JSON.stringify(matchedUser));
         
         // Forced browser jump hook to kill loading freezes completely
         window.location.replace('home.html');
