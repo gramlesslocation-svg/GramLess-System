@@ -267,10 +267,17 @@ if (!currentUserData) {
 }
 
         
-        window.onload = function() {
-            loadUserProfileData();
-            loadSavedAddressProfileData();
-        };
+        // 🚀 FIXED LOADING SEQUENCE: Restructures profile readings and runs the translation engine safely
+window.addEventListener('DOMContentLoaded', function() {
+    // 1. Run profile fields loader
+    loadUserProfileData();
+    loadSavedAddressProfileData();
+    
+    // 2. Safely activate translation engine
+    const activeLanguage = localStorage.getItem('gramless_app_language') || 'en';
+    applyAccountTranslations(activeLanguage);
+});
+
 
         // Reads local databases and loads profile values onto the inputs
         function loadUserProfileData() {
@@ -348,7 +355,7 @@ if (!currentUserData) {
             localStorage.removeItem(`gramless_addr_${currentUserData.email}`);
 
             // Flush login state keys
-            sessionStorage.removeItem('currentUser');
+            localStorage.removeItem('currentUser');
             
             alert('Your account has been deleted permanently out of our systems registries. Returning to gate entryway.');
             window.location.href = 'index.html';
