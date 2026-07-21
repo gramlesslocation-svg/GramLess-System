@@ -247,7 +247,7 @@
 
     <script>
         // Check active role credentials in secure drawer
-        const currentUserData = JSON.parse(sessionStorage.getItem('currentUser'));
+        const currentUserData = JSON.parse(localStorage.getItem('currentUser'));
 
         if (!currentUserData) {
             window.location.href = 'index.html';
