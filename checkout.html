@@ -345,21 +345,36 @@
 <script>
         const authenticatedUserSession = JSON.parse(sessionStorage.getItem('currentUser')) || { email: "unregistered_client@gramless.com", name: "GramLess Customer" };
 
-        window.onload = function() {
-            calculateCheckoutTotals();
-        };
+    window.onload = function() {
+    // 1. Keep your original totals calculation line running first
+    calculateCheckoutTotals();
+    
+    // 2. Add the clean profile autofill logic right below it
+    let savedAddress = JSON.parse(localStorage.getItem(`gramless_addr_${authenticatedUserSession.email}`)) || {};
+    let savedMeta = JSON.parse(localStorage.getItem(`gramless_meta_${authenticatedUserSession.email}`)) || {};
+    
+    if (savedMeta.name || authenticatedUserSession.name) {
+        document.getElementById('field-name').value = savedMeta.name || authenticatedUserSession.name;
+    }
+    if (savedMeta.phone) document.getElementById('field-phone').value = savedMeta.phone;
+    if (savedAddress.city) document.getElementById('field-city').value = savedAddress.city;
+    if (savedAddress.street) document.getElementById('field-street').value = savedAddress.street;
+    if (savedAddress.building) document.getElementById('field-building').value = savedAddress.building;
+    if (savedAddress.apartment) document.getElementById('field-apartment').value = savedAddress.apartment;
+};
 
-        function calculateCheckoutTotals() {
-            let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
-            let subtotalAccumulator = 0;
+function calculateCheckoutTotals() {
+    let cartItems = JSON.parse(localStorage.getItem('gramless_cart')) || [];
+    let subtotalAccumulator = 0;
 
-            cartItems.forEach(item => {
-                subtotalAccumulator += (item.price * item.qty);
-            });
+    cartItems.forEach(item => {
+        subtotalAccumulator += (item.price * item.qty);
+    });
 
-            document.getElementById('footer-checkout-price').innerText = `$${subtotalAccumulator.toFixed(2)}`;
-        }
+    document.getElementById('footer-checkout-price').innerText = `$${subtotalAccumulator.toFixed(2)}`;
+}
 
+        
         function commitFinalCorporateOrder() {
             const name = document.getElementById('field-name').value.trim();
             const market = document.getElementById('field-market').value.trim();
