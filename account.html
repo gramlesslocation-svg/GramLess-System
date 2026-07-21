@@ -258,14 +258,15 @@
     </div>
       <!-- PROFILE AND DATA LAYER LOGIC -->
     <script>
-        // Fetch active account session data from the memory drawer
-        let currentUserData = JSON.parse(sessionStorage.getItem('currentUser'));
+// 🌟 FIXED: Look in localStorage instead of sessionStorage
+let currentUserData = JSON.parse(localStorage.getItem('currentUser'));
 
-        // Boot unauthorized bypass attempts out to log door
-        if (!currentUserData) {
-            window.location.href = 'index.html';
-        }
+// Boot unauthorized bypass attempts out to log door
+if (!currentUserData) {
+    window.location.href = 'index.html';
+}
 
+        
         window.onload = function() {
             loadUserProfileData();
             loadSavedAddressProfileData();
@@ -326,7 +327,7 @@
 
         // Wipe out login active frames and clear view state
         function handleSignOut() {
-            sessionStorage.removeItem('currentUser');
+            localStorage.removeItem('currentUser');
             window.location.href = 'index.html';
         }
 
