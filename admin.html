@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GramLess - Executive Command Hub</title>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --card-bg: #1A1A1A;
+            --text-light: #FFFFFF;
+            --text-muted: #A0A0A5;
+            --primary-yellow: #FFDE4D;
+            --yellow-hover: #E5C740;
+            --border-color: #2C2C2E;
+            --gray-light: #242426;
+            --success-green: #2ECC71;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .admin-wrapper {
+            width: 100%;
+            max-width: 750px;
+            margin-top: 10px;
+        }
+
+        /* Executive Header Elements */
+        .admin-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .admin-title-box {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .admin-title { 
+            font-size: 1.8rem; 
+            font-weight: 800; 
+            letter-spacing: -0.5px;
+        }
+
+        .yellow-accent {
+            color: var(--primary-yellow);
+        }
+        
+        .admin-sub { 
+            font-size: 0.95rem; 
+            color: var(--text-muted); 
+        }
+
+        .btn-admin-logout { 
+            background: transparent; 
+            color: var(--primary-yellow); 
+            border: 1px solid var(--primary-yellow); 
+            padding: 10px 18px; 
+            border-radius: 10px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            font-size: 0.85rem; 
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-admin-logout:hover {
+            background-color: var(--primary-yellow);
+            color: var(--bg-dark);
+        }
+
+        /* Order Card Component Layout */
+        .admin-card { 
+            background: var(--card-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: 18px; 
+            padding: 22px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+            text-align: left; 
+        }
+
+        .admin-card-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            margin-bottom: 16px; 
+            border-bottom: 1px solid var(--border-color); 
+            padding-bottom: 14px; 
+        }
+
+        .admin-market-name { 
+            font-size: 1.3rem; 
+            font-weight: 800; 
+            color: #FFFFFF; 
+            margin-bottom: 4px;
+        }
+
+        .admin-buyer-meta {
+            font-size: 0.88rem; 
+            color: var(--text-muted); 
+        }
+
+        .admin-buyer-meta strong {
+            color: #FFFFFF;
+        }
+
+        .admin-order-id { 
+            font-family: monospace; 
+            font-size: 0.95rem; 
+            font-weight: 800; 
+            color: var(--primary-yellow); 
+            background: var(--gray-light);
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .admin-card-body { 
+            font-size: 1rem; 
+            line-height: 1.7; 
+            color: #E5E5EA; 
+            margin-bottom: 20px; 
+        }
+
+        .admin-card-body strong {
+            color: var(--primary-yellow);
+            font-weight: 600;
+        }
+
+        .driver-note-highlight {
+            background: rgba(255, 222, 77, 0.04);
+            border-left: 3px solid var(--primary-yellow);
+            padding: 12px 14px;
+            border-radius: 4px 8px 8px 4px;
+            margin: 10px 0;
+            display: inline-block;
+            width: 100%;
+        }
+
+        /* Control Input Notification Box */
+        .admin-control-box { 
+            background: var(--gray-light); 
+            border-radius: 14px; 
+            padding: 18px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            border: 1px solid var(--border-color); 
+        }
+
+        .admin-control-box label { 
+            font-size: 0.82rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            color: var(--text-muted); 
+            letter-spacing: 0.8px; 
+        }
+
+        .admin-input-row { 
+            display: flex; 
+            gap: 12px; 
+        }
+
+        .admin-eta-input { 
+            flex-grow: 1; 
+            padding: 12px 14px; 
+            border: 1px solid var(--border-color); 
+            border-radius: 10px; 
+            font-size: 0.98rem; 
+            outline: none; 
+            background: var(--bg-dark); 
+            color: #FFFFFF;
+            transition: border-color 0.2s;
+        }
+
+        .admin-eta-input:focus { 
+            border-color: var(--primary-yellow); 
+        }
+
+        .btn-admin-update { 
+            background: var(--primary-yellow); 
+            color: var(--bg-dark); 
+            border: none; 
+            padding: 12px 24px; 
+            border-radius: 10px; 
+            font-size: 0.9rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            transition: background 0.2s;
+        }
+
+        .btn-admin-update:hover {
+            background-color: var(--yellow-hover);
+        }
+
+        .btn-admin-complete { 
+            background: transparent; 
+            color: var(--success-green); 
+            border: 2px solid var(--success-green); 
+            padding: 12px 20px; 
+            border-radius: 10px; 
+            font-size: 1.1rem; 
+            cursor: pointer; 
+            font-weight: bold; 
+            transition: all 0.2s;
+        }
+
+        .btn-admin-complete:hover {
+            background-color: var(--success-green);
+            color: #FFFFFF;
+        }
+
+        .completed-banner {
+            background: rgba(46, 204, 113, 0.08); 
+            color: var(--success-green); 
+            padding: 14px; 
+            border-radius: 12px; 
+            text-align: center; 
+            font-weight: 700; 
+            font-size: 0.9rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.8px;
+            border: 1px solid rgba(46, 204, 113, 0.15);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="admin-main-wrapper" class="admin-wrapper">
+        <div class="admin-header-row">
+            <div class="admin-title-box">
+                <h1 class="admin-title">Gram<span class="yellow-accent">Less</span> Operations</h1>
+                <p class="admin-sub">Global Storefront Incoming Orders Ledger</p>
+            </div>
+            <button class="btn-admin-logout" onclick="handleLogout()">Sign Out</button>
+        </div>
+        
+        <!-- Live injected orders list stack anchor -->
+        <div id="admin-orders-container-stack"></div>
+    </div>
+    <!-- CORPORATE DATA MANAGEMENT SCRIPTS -->
+    <script>
+        // Direct Operational Gatekeeper: Restrict entry strictly to authenticated operators
+        const currentUserData = JSON.parse(localStorage.getItem('currentUser'));
+
+        if (!currentUserData || currentUserData.email !== 'admin@gramless.com') {
+            alert('Access Denied: This system workspace is reserved strictly for authenticated GramLess operators.');
+            window.location.href = 'index.html';
+        }
+
+        window.onload = function() {
+            renderAdminOrdersLedger();
+        };
+
+        // Reads the shared storage matrices arrays and prints out custom client tiles
+        function renderAdminOrdersLedger() {
+            const stackWrapper = document.getElementById('admin-orders-container-stack');
+            let orders = JSON.parse(localStorage.getItem('gramless_orders')) || [];
+
+            if (orders.length === 0) {
+                stackWrapper.innerHTML = `
+                    <p style="text-align:center; padding:60px 0; color:var(--text-muted); font-size:1.05rem;">
+                        No incoming customer marketplace orders logged inside systems database registry yet.
+                    </p>`;
+                return;
+            }
+
+            // Build grid stack sort reverse ordered (Latest dispatch logs display on top)
+            stackWrapper.innerHTML = orders.reverse().map((order, index) => {
+                const arrayOffsetIndex = (orders.length - 1) - index;
+                const completed = order.status === 'Delivered';
+
+                return `
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <div>
+                                <h3 class="admin-market-name">${order.marketName}</h3>
+                                <div class="admin-buyer-meta">Contact: <strong>${order.clientName}</strong> &bull; Account: ${order.userAccountEmail}</div>
+                            </div>
+                            <span class="admin-order-id">${order.id}</span>
+                        </div>
+                        <div class="admin-card-body">
+                            <strong>📞 Phone Line:</strong> ${order.phone || 'N/A'}<br>
+                            <strong>📦 Inventory Summary:</strong> ${order.itemsSummary}<br>
+                            <strong>📍 Full Address Specs:</strong> ${order.location}<br>
+                            <div class="driver-note-highlight">
+                                <strong>🚚 Driver Special Notes:</strong> "${order.driverInstructions || 'None specified'}"
+                            </div>
+                            <strong>💰 Total Billing Rate:</strong> <span style="color:var(--primary-yellow); font-weight:800;">${order.totalCost}</span><br>
+                            <strong>🔔 Current Notification Message:</strong> <span style="color:#FFA500; font-weight:700;">${order.eta || 'Awaiting admin scheduling'}</span>
+                        </div>
+                        
+                        ${completed ? `
+                            <div class="completed-banner">
+                                ✓ Order Fulfilled & Closed
+                            </div>
+                        ` : `
+                            <div class="admin-control-box">
+                                <label>Specify Expected Delivery Window Notification Update</label>
+                                <div class="admin-input-row">
+                                    <input type="text" id="eta-input-${arrayOffsetIndex}" class="admin-eta-input" placeholder="e.g., Tomorrow morning around 11:30 AM...">
+                                    <button class="btn-admin-update" onclick="submitNotificationUpdate(${arrayOffsetIndex})">Notify</button>
+                                    <button class="btn-admin-complete" onclick="archiveDeliveredTicket(${arrayOffsetIndex})">✓</button>
+                                </div>
+                            </div>
+                        `}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Saves custom notification strings directly into specific order logs
+        function submitNotificationUpdate(index) {
+            const inputField = document.getElementById(`eta-input-${index}`);
+            const textVal = inputField.value.trim();
+
+            if (!textVal) {
+                alert('Input Error: Please type an estimated arrival window timeframe statement first before clicking notify.');
+                return;
+            }
+
+            let orders = JSON.parse(localStorage.getItem('gramless_orders')) || [];
+            
+            // Apply text notification payload values down into specific structural arrays parameters keys mapping values
+            orders[index].eta = "In Transit - Expected " + textVal;
+            orders[index].status = "In Transit";
+
+            localStorage.setItem('gramless_orders', JSON.stringify(orders));
+            alert('Notification successfully pushed back onto the target customer\'s dashboard tracking card!');
+            
+            renderAdminOrdersLedger();
+        }
+
+        function archiveDeliveredTicket(index) {
+            let orders = JSON.parse(localStorage.getItem('gramless_orders')) || [];
+            
+            orders[index].status = "Delivered";
+            orders[index].eta = "Arrived & Safely Received";
+
+            localStorage.setItem('gramless_orders', JSON.stringify(orders));
+            alert('Order record updated successfully! Ticket marked closed and archived.');
+            
+            renderAdminOrdersLedger();
+        }
+
+        // Flush permanent memory login session keys parameters records completely and exit workspaces
+        function handleLogout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
