@@ -314,9 +314,15 @@
                             <strong>🔔 Current Notification Message:</strong> <span style="color:#FFA500; font-weight:700;">${order.eta || 'Awaiting admin scheduling'}</span>
                         </div>
                         
-                        ${completed ? `
-                            <div class="completed-banner">
-                                ✓ Order Fulfilled & Closed
+                                               ${completed ? `
+                            <div style="display: flex; gap: 10px; align-items: center; width: 100%;">
+                                <div class="completed-banner" style="flex-grow: 1;">
+                                    ✓ Order Fulfilled & Closed
+                                </div>
+                                <!-- 🗑️ NEW DELETE BUTTON FOR CLOSED TICKETS -->
+                                <button onclick="deleteOrderPermanently(${arrayOffsetIndex})" style="background: #FF3B30; color: white; border: none; padding: 12px 18px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 1.1rem; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                    ✕
+                                </button>
                             </div>
                         ` : `
                             <div class="admin-control-box">
@@ -332,6 +338,7 @@
                 `;
             }).join('');
         }
+
 
         // Saves custom notification strings directly into specific order logs
         function submitNotificationUpdate(index) {
@@ -372,6 +379,23 @@
             localStorage.removeItem('currentUser');
             window.location.href = 'index.html';
         }
+
+// Removes the targeted order card clean out of the database array matrix permanently
+function deleteOrderPermanently(index) {
+    const confirmation = confirm("Are you sure you want to permanently delete this order record from the system?");
+    if (!confirmation) return;
+
+    let orders = JSON.parse(localStorage.getItem('gramless_orders')) || [];
+    
+    // Remove the selected item by its array position index
+    orders.splice(index, 1);
+    
+    localStorage.setItem('gramless_orders', JSON.stringify(orders));
+    alert('Order successfully deleted!');
+    renderAdminOrdersLedger(); // Refresh desk view lines automatically
+}
+
+        
     </script>
 </body>
 </html>
