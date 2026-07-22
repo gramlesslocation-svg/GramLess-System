@@ -343,7 +343,7 @@
 
         <!-- 🚚 DRIVER INSTRUCTIONS INPUT CARD -->
 <script>
-        const authenticatedUserSession = JSON.parse(sessionStorage.getItem('currentUser')) || { email: "unregistered_client@gramless.com", name: "GramLess Customer" };
+        const authenticatedUserSession = JSON.parse(localStorage.getItem('currentUser')) || { email: "unregistered_client@gramless.com", name: "GramLess Customer" };
 
     window.onload = function() {
     // 1. Keep your original totals calculation line running first
